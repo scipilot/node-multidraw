@@ -1,0 +1,28 @@
+doctype 5
+html
+  head
+    title Tim's Multiplayer Draw App
+    link(rel="stylesheet" href="style.css")
+    script(src="draw.js")
+  body
+    div#optionPanel
+      div#optionPanelTab O
+      p
+        strong Colour
+      ul
+        li#c-green.c Green
+        li#c-blue.c Blue
+        li#c-orange.c Orange
+        li#c-pink.c Pink
+        li#c-black.c Black
+        li#c-yellow.c Yellow
+        li#c-red.c Red
+    div#cursors
+    canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
+    hgroup#instructions
+      h1 Draw anywhere!
+      h2 You will see everyone else who is doing the same.
+      h3 Tip: if the drawing area gets dirty, refresh the page.
+    script(src="/socket.io/socket.io.js")
+    script(src="http://code.jquery.com/jquery-1.10.1.min.js")
+    script(src="draw.js")
