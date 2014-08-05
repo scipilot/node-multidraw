@@ -10,7 +10,9 @@ $(function(){
     ctx = canvas[0].getContext('2d'),
     instructions = $('#instructions'),
     optionTabOpen = true;
+    settingsTabOpen = false;
     setColor = '#000';
+    defaultName = "Guest";
     
     // Generate an unique ID
     var id = Math.round($.now()*Math.random());
@@ -50,6 +52,10 @@ $(function(){
 	clients[data.id].updated = $.now();
     });
 
+    socket.on('chatmessage', function (data) {
+	alertify.log(data.user + ": " + data.message);
+    });
+    
     var prev = {};
     
     canvas.on('mousedown',function(e){
@@ -96,18 +102,14 @@ $(function(){
     setInterval(function(){
 	
 	for(ident in clients){
-	    if($.now() - clients[ident].updated > 10000){
-		
-		// Last update was more than 10 seconds ago. 
-		// This user has probably closed the page
-		
+	    if($.now() - clients[ident].updated > 1000 * 10){
 		cursors[ident].remove();
 		delete clients[ident];
 		delete cursors[ident];
 	    }
 	}
 	
-    },10000);
+    },1000);
 
     function drawLine(fromx, fromy, tox, toy, color){
 	ctx.beginPath(); //need to enclose in begin/close for colour settings to work
@@ -122,16 +124,73 @@ $(function(){
 	console.log($(this).css("background-color"));
 	setColor = $(this).css("background-color");
     });
-
+    
+    //colour picker
     $('#optionPanelTab').click(function(){
 	if(optionTabOpen){
-	    $('#optionPanel').animate({right: -80});
+	    $('#optionPanel').animate({right: -80}, 200);
 	    optionTabOpen = false;
 	} else {
-	    $('#optionPanel').animate({right: 0});
+	    $('#optionPanel').animate({right: 0}, 200);
 	    optionTabOpen = true;
 	}
 
     });
+    //settings panel
+    $('#settingsPanelTab').click(function(){
+	if(!settingsTabOpen){
+	    $('#settingsPanel').animate({bottom: 0}, 200);
+	    settingsTabOpen = true;
+	} else {
+	    $('#settingsPanel').animate({bottom: -300}, 200);
+	    settingsTabOpen = false;
+	}
+	
+    });
+    
+    var paper = document.getElementById('paper');
+    var hammertime = Hammer(paper).on("tap", function(e){
+	console.log("tap");
+	console.log(e);
+    });
+    
+    Hammer(document).on("drag", function(e) {
+	e.preventDefault();
+        //console.log(this, event);
+	//console.log(e);
+    });
+    Hammer(document).on('dragstart', function(e){
+	e.preventDefault();
+	console.log("dragstart");
+    });
+
+    function preventBehavior(e){ 
+	e.preventDefault(); 
+    };
+    
+    document.addEventListener("touchmove", preventBehavior, false);
+
+    /** 
+	Chat related 
+    */
+    $('#chatBox').keyup(function(e){
+	if(e.keyCode == 13){
+            sendMessage();
+	}
+    });
+
+    function sendMessage(){
+	var message = $("#chatBox").val();
+	var user = $("#usernameInput").val();
+	if(user.length < 1){
+	    user = defaultName;
+	}
+	
+	socket.emit('chatmessage', {
+	    message: message,
+	    user: user
+	});
+	$('#chatBox').val("");
+    }
 
 });

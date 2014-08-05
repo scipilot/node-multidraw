@@ -3,10 +3,11 @@ html
   head
     title Tim's Multiplayer Draw App
     link(rel="stylesheet" href="style.css")
-    script(src="draw.js")
+    link(rel="stylesheet" href="alertify.core.css")
+    link(rel="stylesheet" href="alertify.default.css")	
   body
     div#optionPanel
-      div#optionPanelTab O
+      div#optionPanelTab C
       p
         strong Colour
       ul
@@ -22,7 +23,17 @@ html
     hgroup#instructions
       h1 Draw anywhere!
       h2 You will see everyone else who is doing the same.
-      h3 Tip: if the drawing area gets dirty, refresh the page.
+      h3 Note: Drawings are saved and get redrawn until server reboots!
+    div#chatArea
+    div#settingsPanel
+      div#settingsPanelTab Settings
+      input(type="text" id="usernameInput" placeholder="Username: Guest")
+      br
+      p node-multidraw v0.5 by <a href="http://timatooth.com">Tim Sullivan</a>
+      p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
+    input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
     script(src="/socket.io/socket.io.js")
     script(src="http://code.jquery.com/jquery-1.10.1.min.js")
+    script(src="jquery.hammer.min.js")
+    script(src="alertify.min.js")
     script(src="draw.js")

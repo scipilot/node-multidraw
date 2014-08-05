@@ -4,6 +4,8 @@ Features:
 
 * Multiplayer drawing.
 * Colour picker
+* Chat
+* Drawing stays in server memory and is transmitted when user joins.
 
 License: MIT
 Author: Tim Sullivan <tim@timatooth.com>

@@ -5,6 +5,10 @@ var express = require('express'), app = express();
 var server = http.createServer(app).listen(port);
 var jade = require('jade');
 var io = require('socket.io').listen(server);
+
+var drawActionStack = [];
+var toSpewOn;
+
 app.use(express.logger());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -20,8 +24,31 @@ app.get('/', function(req, res){
 io.set("log level", 1);
 
 io.sockets.on('connection', function(socket){
+    var i;
+    
+    for(i = 0; i < drawActionStack.length; i += 1){
+	socket.emit('moving', drawActionStack[i]);
+    }
 
     socket.on('mousemove', function(data){
+	//if they drew something add it to the action stack.
+	if(data.drawing){
+	    drawActionStack.push(data);
+	} else if( drawActionStack.length > 1 && drawActionStack[drawActionStack.length - 1]){
+	    //if they stopped drawing store the last draw position.
+	    drawActionStack.push(data);
+	}
 	socket.broadcast.emit('moving', data);
+    });
+
+    socket.on('chatmessage', function(data){
+	data.message = data.message.replace(/(<([^>]+)>)/ig,""); //take out possible tags.
+	//limit chat message length.
+	if (data.message.length <= 135) {
+	    socket.broadcast.emit('chatmessage', {
+		user: data.user,
+		message: data.message
+	    });
+	}
     });
 });
