@@ -55,6 +55,18 @@ $(function(){
     socket.on('chatmessage', function (data) {
 	alertify.log(data.user + ": " + data.message);
     });
+
+    socket.on('drawActionHistory', function(history){
+	var i = 0, oc = {};
+	console.log("History length is " + history.length);
+	for(i = 0; i < history.length; i += 1){
+	    if(history[i].drawing && oc[history[i].id]){
+		drawLine(oc[history[i].id].x, oc[history[i].id].y, history[i].x, history[i].y, history[i].color)
+	    }
+	    oc[history[i].id] = history[i]; //update state.
+	}
+
+    });
     
     var prev = {};
     
@@ -150,8 +162,8 @@ $(function(){
     
     var paper = document.getElementById('paper');
     var hammertime = Hammer(paper).on("tap", function(e){
-	console.log("tap");
-	console.log(e);
+	//console.log("tap");
+	//console.log(e);
     });
     
     Hammer(document).on("drag", function(e) {
@@ -161,7 +173,7 @@ $(function(){
     });
     Hammer(document).on('dragstart', function(e){
 	e.preventDefault();
-	console.log("dragstart");
+	//console.log("dragstart");
     });
 
     function preventBehavior(e){ 

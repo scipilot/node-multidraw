@@ -24,11 +24,8 @@ app.get('/', function(req, res){
 io.set("log level", 1);
 
 io.sockets.on('connection', function(socket){
-    var i;
-    
-    for(i = 0; i < drawActionStack.length; i += 1){
-	socket.emit('moving', drawActionStack[i]);
-    }
+    /* Send new connection the drawing history as one large array. */
+    socket.emit('drawActionHistory', drawActionStack);
 
     socket.on('mousemove', function(data){
 	//if they drew something add it to the action stack.
