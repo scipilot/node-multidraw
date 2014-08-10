@@ -19,6 +19,8 @@ $(function(){
     
     // A flag for drawing activity
     var drawing = false;
+    //store the last time a ping was sent.
+    var lastPing = 0;
 
     var clients = {};
     var cursors = {};
@@ -66,6 +68,26 @@ $(function(){
 	    oc[history[i].id] = history[i]; //update state.
 	}
 
+    });
+
+    /*Respond to server 'pings' */
+    socket.on('ping', function(data){
+	socket.emit('pong', id);
+    });
+
+    socket.on('pong', function(data){
+	var s, latency;
+	latency = $.now() - lastPing;
+	lastPing = $.now();
+	s = $('#serverStats');
+	s.empty();
+	s.append("<tr><th>Server Latency</th><td>"+latency+" ms</td></tr>");
+	for (var key in data) {
+	    if (data.hasOwnProperty(key)) {
+		s.append("<tr><th>"+key+"</th><td>"+data[key]+"</td></tr>");
+	    }
+	}
+	
     });
     
     var prev = {};
@@ -151,6 +173,8 @@ $(function(){
     //settings panel
     $('#settingsPanelTab').click(function(){
 	if(!settingsTabOpen){
+	    socket.emit('ping', id);
+	    lastPing = $.now();
 	    $('#settingsPanel').animate({bottom: 0}, 200);
 	    settingsTabOpen = true;
 	} else {
@@ -189,6 +213,9 @@ $(function(){
 	if(e.keyCode == 13){
             sendMessage();
 	}
+    });
+    $('#statsShow').click(function(){
+	$('#serverStats').toggle();
     });
 
     function sendMessage(){

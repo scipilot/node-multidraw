@@ -139,14 +139,25 @@ h3{
     box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
 }
 
-#settingsPanel p {
+#settingsPanel {
     color: white;
     font-size: 0.8em;
-    padding: 10px;
+}
+#settingsPanel input, p, label, table {
+    margin: 10px;
 }
 
-#settingsPanel input {
-    margin: 10px;
+#settingsPanel th {
+    text-align: left;
+}
+#serverStats {
+    display: none;
+}
+
+
+#bottomAttribution {
+    position: absolute;
+    bottom: 3px;
 }
 
 #settingsPanelTab{

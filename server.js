@@ -7,7 +7,7 @@ var jade = require('jade');
 var io = require('socket.io').listen(server);
 
 var drawActionStack = [];
-var toSpewOn;
+var connectedClients = 0;
 
 app.use(express.logger());
 app.set('views', __dirname + '/views');
@@ -24,6 +24,7 @@ app.get('/', function(req, res){
 io.set("log level", 1);
 
 io.sockets.on('connection', function(socket){
+    connectedClients++;
     /* Send new connection the drawing history as one large array. */
     socket.emit('drawActionHistory', drawActionStack);
 
@@ -32,7 +33,6 @@ io.sockets.on('connection', function(socket){
 	if(data.drawing){
 	    drawActionStack.push(data);
 	} else if( drawActionStack.length > 1 && drawActionStack[drawActionStack.length - 1]){
-	    //if they stopped drawing store the last draw position.
 	    drawActionStack.push(data);
 	}
 	socket.broadcast.emit('moving', data);
@@ -48,4 +48,18 @@ io.sockets.on('connection', function(socket){
 	    });
 	}
     });
+
+    socket.on('ping', function(id){
+	var data = {
+	    stackSize: drawActionStack.length,
+	    connectedClients: connectedClients
+	};
+	socket.emit('pong', data);
+    });
+
+    socket.on('disconnect', function() {
+	connectedClients--; 
+    });
+
 });
+	      
