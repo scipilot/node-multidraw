@@ -8,6 +8,7 @@ var io = require('socket.io').listen(server);
 
 var drawActionStack = [];
 var connectedClients = 0;
+var clients = {};
 
 app.use(express.logger());
 app.set('views', __dirname + '/views');
@@ -24,17 +25,36 @@ app.get('/', function(req, res){
 io.set("log level", 1);
 
 io.sockets.on('connection', function(socket){
-    connectedClients++;
-    /* Send new connection the drawing history as one large array. */
+
+    connectedClients += 1;
     socket.emit('drawActionHistory', drawActionStack);
 
     socket.on('mousemove', function(data){
-	//if they drew something add it to the action stack.
-	if(data.drawing){
-	    drawActionStack.push(data);
-	} else if( drawActionStack.length > 1 && drawActionStack[drawActionStack.length - 1]){
-	    drawActionStack.push(data);
+	if(data.id in clients){
+	    var client = clients[data.id];
+	    
+	    if(data.drawing){
+		var drawAction = {
+		    fromX: client.x,
+		    fromY: client.y,
+		    toX: data.x,
+		    toY: data.y,
+		    color: data.color
+		};
+		drawActionStack.push(drawAction);
+	    }
+	    
+	} else {
+	    //initilise a new client
+	    var newClient = {
+		id: data.id
+	    };
+	    clients[data.id] = newClient;
 	}
+
+	clients[data.id].x = data.x;
+	clients[data.id].y = data.y;
+
 	socket.broadcast.emit('moving', data);
     });
 
@@ -51,7 +71,7 @@ io.sockets.on('connection', function(socket){
 
     socket.on('ping', function(id){
 	var data = {
-	    stackSize: drawActionStack.length,
+	    drawStackSize: drawActionStack.length,
 	    connectedClients: connectedClients
 	};
 	socket.emit('pong', data);

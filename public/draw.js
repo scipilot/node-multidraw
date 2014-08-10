@@ -59,13 +59,10 @@ $(function(){
     });
 
     socket.on('drawActionHistory', function(history){
-	var i = 0, oc = {};
+	var i = 0;
 	console.log("History length is " + history.length);
 	for(i = 0; i < history.length; i += 1){
-	    if(history[i].drawing && oc[history[i].id]){
-		drawLine(oc[history[i].id].x, oc[history[i].id].y, history[i].x, history[i].y, history[i].color)
-	    }
-	    oc[history[i].id] = history[i]; //update state.
+	    drawLine(history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color)
 	}
 
     });
