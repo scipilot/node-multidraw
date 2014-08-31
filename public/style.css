@@ -182,3 +182,7 @@ h3{
     width: 45%;
     pointer-events: none;
 }
+
+#usernameInput {
+    width: 160px;
+}
