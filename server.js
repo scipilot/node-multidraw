@@ -5,10 +5,11 @@ var express = require('express'), app = express();
 var server = http.createServer(app).listen(port);
 var jade = require('jade');
 var io = require('socket.io').listen(server);
-var os = require('os')
+var os = require('os');
+var redis = require("redis"),
+redisClient = redis.createClient();
 
-var drawActionStack = [];
-var connectedClients = 0;
+var localConnectedClients = 0;
 var clients = {};
 var netUsage = 0;
 
@@ -27,11 +28,27 @@ app.get('/', function(req, res){
 
 io.set("log level", 1);
 
-io.sockets.on('connection', function(socket){
+redisClient.on("error", function(err){
+    console.log("Redis Error: " + err);
+});
 
-    connectedClients += 1;
-    socket.emit('drawActionHistory', drawActionStack);
-    netUsage += sizeof(drawActionStack);
+//set client connection key if not exists
+redisClient.setnx("clientcount", 0);
+
+io.sockets.on('connection', function(socket){
+    var drawActions = [];
+    localConnectedClients += 1;
+    redisClient.incr("clientcount");
+
+    redisClient.lrange("drawactions", 0, -1, function(err, replies){
+	replies.forEach(function(reply, i){
+	    drawActions.push(JSON.parse(reply));
+	});
+
+	//send data
+	socket.emit('drawActionHistory', drawActions);
+	netUsage += sizeof(drawActions);
+    });
 
     socket.on('mousemove', function(data){
 	if(data.id in clients){
@@ -45,7 +62,9 @@ io.sockets.on('connection', function(socket){
 		    toY: data.y,
 		    color: data.color
 		};
-		drawActionStack.push(drawAction);
+
+		redisClient.rpush("drawactions",
+				  JSON.stringify(drawAction));
 	    }
 	    
 	} else {
@@ -59,13 +78,14 @@ io.sockets.on('connection', function(socket){
 	clients[data.id].x = data.x;
 	clients[data.id].y = data.y;
 
-	netUsage += sizeof(data) * connectedClients;
+	netUsage += sizeof(data) * localConnectedClients;
 	socket.broadcast.emit('moving', data);
     });
 
     socket.on('chatmessage', function(data){
-	netUsage += sizeof(data) * connectedClients;
-	data.message = data.message.replace(/(<([^>]+)>)/ig,""); //take out possible tags.
+	netUsage += sizeof(data) * localConnectedClients;
+	//take out possible tags.
+	data.message = data.message.replace(/(<([^>]+)>)/ig,"");
 	//limit chat message length.
 	if (data.message.length <= 135) {
 	    socket.broadcast.emit('chatmessage', {
@@ -75,22 +95,41 @@ io.sockets.on('connection', function(socket){
 	}
     });
 
-    socket.on('ping', function(id){
+    socket.on('stats', function(id){
+	var multi = redisClient.multi();
 	var data = {
-	    drawStackSize: drawActionStack.length,
-	    connectedClients: connectedClients,
 	    load1: (os.loadavg()[0]).toFixed(2),
-	    netUsageKB: (netUsage / 1000).toFixed(1)
+	    netUsageKB: (netUsage / 1000).toFixed(1),
+	    nodeConnections: localConnectedClients
 	};
-	netUsage += sizeof(data);
-	socket.emit('pong', data);
+
+	multi.llen("drawactions", function(err, reply){
+	    data['drawStackSize'] = reply;
+	});
+
+	multi.get('clientcount', function(err, reply){
+	    data['globalConnectedClients'] = reply;
+	});
+
+	multi.exec(function(err, replies){
+	    socket.emit('stats', data);
+	    netUsage += sizeof(data);
+	});
+    });
+
+    socket.on('ping', function(data){
+	socket.emit('pong');
     });
 
     socket.on('disconnect', function() {
-	connectedClients--; 
+	localConnectedClients -= 1;
+	redisClient.decr("clientcount");
     });
 });
 
+/**
+ * Get the estimated size of an object in bytes
+ */
 function sizeof(object) {
     var objectList = [];
     var stack = [object];

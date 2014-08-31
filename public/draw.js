@@ -79,12 +79,20 @@ $(function(){
 	s = $('#serverStats');
 	s.empty();
 	s.append("<tr><th>Server Latency</th><td>"+latency+" ms</td></tr>");
+	socket.emit('stats');
+    });
+
+    socket.on('stats', function(data){
+	var s = $('#serverStats');
 	for (var key in data) {
 	    if (data.hasOwnProperty(key)) {
-		s.append("<tr><th>"+key+"</th><td>"+data[key]+"</td></tr>");
+		s.append("<tr><th>" +
+			 key +
+			 "</th><td>" +
+			 data[key] +
+			 "</td></tr>");
 	    }
 	}
-	
     });
     
     var prev = {};
