@@ -12,7 +12,11 @@ $(function(){
     optionTabOpen = true;
     settingsTabOpen = false;
     setColor = '#000';
-    defaultName = "Guest";
+    defaultName = "Guest",
+    draggingTool = false,
+    dragging = false;
+
+    var pastDragX = 0, pastDragY = 0;
     
     // Generate an unique ID
     var id = Math.round($.now()*Math.random());
@@ -99,41 +103,85 @@ $(function(){
     
     canvas.on('mousedown',function(e){
 	e.preventDefault();
-	drawing = true;
-	prev.x = e.pageX;
-	prev.y = e.pageY;
+	if(!draggingTool){
+	    drawing = true;
+	    prev.x = e.pageX;
+	    prev.y = e.pageY;   
+	    // Hide the instructions
+	    instructions.fadeOut();
+	} else {
+	    //we're dragging the page around
+	    dragging = true;
+	}
+	pastDragX = e.pageX;
+	pastDragY = e.pageY;
 	
-	// Hide the instructions
-	instructions.fadeOut();
     });
     
     doc.bind('mouseup mouseleave',function(){
 	drawing = false;
+	dragging = false;
     });
 
     var lastEmit = $.now();
 
     doc.on('mousemove',function(e){
-	if($.now() - lastEmit > 10){
-	    socket.emit('mousemove',{
-		'x': e.pageX,
-		'y': e.pageY,
-		'drawing': drawing,
-		'id': id,
-		'color': setColor
-	    });
-	    lastEmit = $.now();
-	}
-	
-	// Draw a line for the current user's movement, as it is
-	// not received in the socket.on('moving') event above
-	
-	if(drawing){
+	if(!draggingTool){
+	    if($.now() - lastEmit > 10){
+		socket.emit('mousemove',{
+		    'x': e.pageX,
+		    'y': e.pageY,
+		    'drawing': drawing,
+		    'id': id,
+		    'color': setColor
+		});
+		lastEmit = $.now();
+	    }
 	    
-	    drawLine(prev.x, prev.y, e.pageX, e.pageY, setColor);
+	    // Draw a line for the current user's movement, as it is
+	    // not received in the socket.on('moving') event above
 	    
-	    prev.x = e.pageX;
-	    prev.y = e.pageY;
+	    if(drawing){
+		
+		drawLine(prev.x, prev.y, e.pageX, e.pageY, setColor);
+		
+		prev.x = e.pageX;
+		prev.y = e.pageY;
+	    }
+	} else {
+	    //we're dragging!
+	    if(dragging){
+		/*
+		//get the current (top, left) for canvas element
+	
+		var dX, dY;
+		//get the difference between now and then
+		dX = e.pageX - pastDragX;
+		dY = e.pageY - pastDragY;
+
+		//we need to find out the relative x,y inside the canvas element
+		var relX = e.pageX - curX;
+		var relY = e.pageY - curY;
+	
+		var cOriginX = e.pageX - relX;
+		var cOriginY = e.pageY - relY;
+
+		//console.log("dX " + dX + " dY " + dY + " css curX " + curX + " curY " + curY);
+		
+		//$('#paper').css({top: curY + dY, left: curX + dX});
+		
+		pastDragX = e.pageX;
+		pastDragY = e.pageY;
+		*/
+		var curX = parseInt($('#paper').css('left'), 10);
+		var curY = parseInt($('#paper').css('top'), 10);
+		var dX = e.pageX - pastDragX;
+		var dY = e.pageY - pastDragY;
+		$('#paper').css({top: curY + dY, left: curX + dX});
+	//	console.log(dX);
+		pastDragX = e.pageX;
+		pastDragY = e.pageY;
+	    }
 	}
     });
 
@@ -236,5 +284,17 @@ $(function(){
 	});
 	$('#chatBox').val("");
     }
+
+    //enable/disable the dragging tool
+    $('#handTool').click(function(){
+	draggingTool = !draggingTool;
+	if(draggingTool){
+	    $('canvas').addClass("canvas-draggable");
+	    $('#handTool').addClass('active');
+	} else {
+	    $('canvas').removeClass("canvas-draggable");
+	    $('#handTool').removeClass('active');
+	}
+    });
 
 });
