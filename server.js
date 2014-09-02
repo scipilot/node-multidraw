@@ -8,6 +8,7 @@ var io = require('socket.io').listen(server);
 var os = require('os');
 var redis = require("redis"),
 redisClient = redis.createClient();
+var lzwCompress = require('lzwcompress');
 
 var localConnectedClients = 0;
 var clients = {};
@@ -40,14 +41,18 @@ io.sockets.on('connection', function(socket){
     localConnectedClients += 1;
     redisClient.incr("clientcount");
 
+    //TODO Need to optimise this
     redisClient.lrange("drawactions", 0, -1, function(err, replies){
 	replies.forEach(function(reply, i){
 	    drawActions.push(JSON.parse(reply));
 	});
 
-	//send data
-	socket.emit('drawActionHistory', drawActions);
-	netUsage += sizeof(drawActions);
+	//compress drawaction history data
+	var compressedActions = lzwCompress.pack(drawActions)
+	//send it
+	socket.emit('drawActionHistory', compressedActions);
+	//increment netusage tracker.
+	netUsage += sizeof(compressedActions);
     });
 
     socket.on('mousemove', function(data){

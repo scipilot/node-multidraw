@@ -62,8 +62,9 @@ $(function(){
 	alertify.log(data.user + ": " + data.message);
     });
 
-    socket.on('drawActionHistory', function(history){
+    socket.on('drawActionHistory', function(compressedHistory){
 	var i = 0;
+	var history = lzwCompress.unpack(compressedHistory);
 	for(i = 0; i < history.length; i += 1){
 	    drawLine(history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color)
 	}
