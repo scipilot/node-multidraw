@@ -213,12 +213,12 @@ $(function(){
     });
     
     //colour picker
-    $('#optionPanelTab').click(function(){
+    $('#colorPanelTab').click(function(){
 	if(optionTabOpen){
-	    $('#optionPanel').animate({right: -80}, 200);
+	    $('#colourPanel').animate({right: -80}, 200);
 	    optionTabOpen = false;
 	} else {
-	    $('#optionPanel').animate({right: 0}, 200);
+	    $('#colourPanel').animate({right: 0}, 200);
 	    optionTabOpen = true;
 	}
 
