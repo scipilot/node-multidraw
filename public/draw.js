@@ -9,7 +9,7 @@ $(function(){
     canvas = $('#paper'),
     ctx = canvas[0].getContext('2d'),
     instructions = $('#instructions'),
-    optionTabOpen = true;
+    colourTabOpen = true;
     settingsTabOpen = false;
     setColor = '#000';
     defaultName = "Guest",
@@ -64,7 +64,6 @@ $(function(){
 
     socket.on('drawActionHistory', function(history){
 	var i = 0;
-	console.log("History length is " + history.length);
 	for(i = 0; i < history.length; i += 1){
 	    drawLine(history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color)
 	}
@@ -151,34 +150,11 @@ $(function(){
 	} else {
 	    //we're dragging!
 	    if(dragging){
-		/*
-		//get the current (top, left) for canvas element
-	
-		var dX, dY;
-		//get the difference between now and then
-		dX = e.pageX - pastDragX;
-		dY = e.pageY - pastDragY;
-
-		//we need to find out the relative x,y inside the canvas element
-		var relX = e.pageX - curX;
-		var relY = e.pageY - curY;
-	
-		var cOriginX = e.pageX - relX;
-		var cOriginY = e.pageY - relY;
-
-		//console.log("dX " + dX + " dY " + dY + " css curX " + curX + " curY " + curY);
-		
-		//$('#paper').css({top: curY + dY, left: curX + dX});
-		
-		pastDragX = e.pageX;
-		pastDragY = e.pageY;
-		*/
 		var curX = parseInt($('#paper').css('left'), 10);
 		var curY = parseInt($('#paper').css('top'), 10);
 		var dX = e.pageX - pastDragX;
 		var dY = e.pageY - pastDragY;
 		$('#paper').css({top: curY + dY, left: curX + dX});
-	//	console.log(dX);
 		pastDragX = e.pageX;
 		pastDragY = e.pageY;
 	    }
@@ -208,21 +184,21 @@ $(function(){
     }
 
     $('.c').click(function(){
-	console.log($(this).css("background-color"));
 	setColor = $(this).css("background-color");
     });
     
     //colour picker
-    $('#colorPanelTab').click(function(){
-	if(optionTabOpen){
+    $('#colourPanelTab').click(function(){
+	if(colourTabOpen){
 	    $('#colourPanel').animate({right: -80}, 200);
-	    optionTabOpen = false;
+	    colourTabOpen = false;
 	} else {
 	    $('#colourPanel').animate({right: 0}, 200);
-	    optionTabOpen = true;
+	    colourTabOpen = true;
 	}
 
     });
+
     //settings panel
     $('#settingsPanelTab').click(function(){
 	if(!settingsTabOpen){
@@ -238,19 +214,13 @@ $(function(){
     });
     
     var paper = document.getElementById('paper');
-    var hammertime = Hammer(paper).on("tap", function(e){
-	//console.log("tap");
-	//console.log(e);
-    });
     
     Hammer(document).on("drag", function(e) {
 	e.preventDefault();
-        //console.log(this, event);
-	//console.log(e);
     });
+
     Hammer(document).on('dragstart', function(e){
 	e.preventDefault();
-	//console.log("dragstart");
     });
 
     function preventBehavior(e){ 
@@ -267,6 +237,7 @@ $(function(){
             sendMessage();
 	}
     });
+
     $('#statsShow').click(function(){
 	$('#serverStats').toggle();
     });
@@ -287,13 +258,16 @@ $(function(){
 
     //enable/disable the dragging tool
     $('#handTool').click(function(){
-	draggingTool = !draggingTool;
+	draggingTool = !draggingTool; //toggle state
 	if(draggingTool){
 	    $('canvas').addClass("canvas-draggable");
 	    $('#handTool').addClass('active');
 	} else {
 	    $('canvas').removeClass("canvas-draggable");
 	    $('#handTool').removeClass('active');
+	    //if they turned off the hand tool animate back
+	    //this is probably temp untill I get tiling working
+	    $('#paper').animate({top: 0, left: 0});
 	}
     });
 
