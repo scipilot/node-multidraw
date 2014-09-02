@@ -111,6 +111,11 @@ io.sockets.on('connection', function(socket){
 	    data['globalConnectedClients'] = reply;
 	});
 
+	multi.lastsave(function(err, reply){
+	    var now = (new Date().getTime()) / 1000;
+	    data['lastStateSave'] = ((now - reply) / 60).toFixed(1);
+	});
+
 	multi.exec(function(err, replies){
 	    socket.emit('stats', data);
 	    netUsage += sizeof(data);
