@@ -1,11 +1,11 @@
-doctype 5
+doctype html
 html
   head
     title Tim's Multiplayer Draw App
-    meta(name="viewport" content="initial-scale=1")	
+    meta(name="viewport" content="initial-scale=1")
     link(rel="stylesheet" href="style.css")
     link(rel="stylesheet" href="alertify.core.css")
-    link(rel="stylesheet" href="alertify.default.css")	
+    link(rel="stylesheet" href="alertify.default.css")
   body
     div#colourPanel
       div#colourPanelTab C
@@ -19,7 +19,7 @@ html
         li#c-black.c Black
         li#c-yellow.c Yellow
         li#c-red.c Red
-      div#handTool	
+      div#handTool
     div#cursors
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     hgroup#instructions
@@ -39,9 +39,10 @@ html
         p node-multidraw v0.5 by <a href="http://timatooth.com">Tim Sullivan</a>
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
     input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
-    script(src="/socket.io/socket.io.js")
+    script(src="socket.io-1.0.6.min.js")
     script(src="http://code.jquery.com/jquery-2.1.1.min.js")
     script(src="jquery.hammer.min.js")
     script(src="alertify.min.js")
     script(src="lzwCompress.js")
     script(src="draw.js")
+
