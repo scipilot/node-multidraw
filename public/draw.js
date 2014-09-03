@@ -7,7 +7,7 @@ $(function(){
     var doc = $(document),
     win = $(window),
     canvas = $('#paper'),
-    ctx = canvas[0].getContext('2d'),
+    context = canvas[0].getContext('2d'),
     instructions = $('#instructions'),
     colourTabOpen = true;
     settingsTabOpen = false;
@@ -50,7 +50,7 @@ $(function(){
 	    // Draw a line on the canvas. clients[data.id] holds
 	    // the previous position of this user's mouse pointer
 	    
-	    drawLine(clients[data.id].x, clients[data.id].y, data.x, data.y, data.color);
+	    drawLine(context, clients[data.id].x, clients[data.id].y, data.x, data.y, data.color);
 	}
 	
 	// Saving the current client state
@@ -65,9 +65,22 @@ $(function(){
     socket.on('drawActionHistory', function(compressedHistory){
 	var i = 0;
 	var history = lzwCompress.unpack(compressedHistory);
+	//offscreen canvas
+	var osc = document.createElement('canvas');
+	osc.width = 1600;
+	osc.height = 1000;
+	var osctx = osc.getContext('2d');
+	//history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color
 	for(i = 0; i < history.length; i += 1){
-	    drawLine(history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color)
+	    osctx.beginPath();
+	    osctx.strokeStyle = history[i].color;
+	    osctx.moveTo(history[i].fromX, history[i].fromY);
+	    osctx.lineTo(history[i].toX, history[i].toY);
+	    osctx.stroke();
+	    osctx.closePath();
 	}
+
+	context.drawImage(osc, 0, 0);
 
     });
 
@@ -143,7 +156,7 @@ $(function(){
 	    
 	    if(drawing){
 		
-		drawLine(prev.x, prev.y, e.pageX, e.pageY, setColor);
+		drawLine(context, prev.x, prev.y, e.pageX, e.pageY, setColor);
 		
 		prev.x = e.pageX;
 		prev.y = e.pageY;
@@ -175,7 +188,7 @@ $(function(){
 	
     },1000);
 
-    function drawLine(fromx, fromy, tox, toy, color){
+    function drawLine(ctx, fromx, fromy, tox, toy, color){
 	ctx.beginPath(); //need to enclose in begin/close for colour settings to work
 	ctx.strokeStyle = color;
 	ctx.moveTo(fromx, fromy);
