@@ -30,6 +30,10 @@ $(function(){
     var cursors = {};
 
     var socket = io.connect();
+
+    socket.on('connect', function(){
+	$('#bigTitle').text('Connected to server');
+    });
     
     socket.on('moving', function (data) {
 	
@@ -64,13 +68,15 @@ $(function(){
 
     socket.on('drawActionHistory', function(compressedHistory){
 	var i = 0;
+	$('#bigTitle').text("Decompressing History...");
 	var history = lzwCompress.unpack(compressedHistory);
+	$('#bigTitle').text("Rendering history...");
 	//offscreen canvas
 	var osc = document.createElement('canvas');
 	osc.width = 1600;
 	osc.height = 1000;
 	var osctx = osc.getContext('2d');
-	//history[i].fromX, history[i].fromY, history[i].toX, history[i].toY, history[i].color
+
 	for(i = 0; i < history.length; i += 1){
 	    osctx.beginPath();
 	    osctx.strokeStyle = history[i].color;
@@ -81,6 +87,7 @@ $(function(){
 	}
 
 	context.drawImage(osc, 0, 0);
+	$('#bigTitle').text("Draw anywhere!");
 
     });
 
