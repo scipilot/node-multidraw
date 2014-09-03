@@ -57,7 +57,6 @@ app.set('view options', {layout: false });
 app.enable('trust proxy');
 
 app.get('/', function(req, res){
-    res.set('Cache-Control', 'public, max-age=86400');
     res.render('main.jade');
 });
 
