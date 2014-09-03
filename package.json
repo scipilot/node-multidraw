@@ -9,7 +9,8 @@
 	"jade": "1.6.x",
 	"socket.io": "1.0.6",
         "redis": "0.12.x",
-	"lzwcompress": "0.1.x"
+	"lzwcompress": "0.1.x",
+	"node-minify": "0.10.x"
     },
     "engines": {
 	"node": "0.10.x",

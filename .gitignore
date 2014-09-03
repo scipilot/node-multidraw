@@ -1,2 +1,4 @@
 *~
 node_modules/
+public/draw.min.js
+public/style.min.css

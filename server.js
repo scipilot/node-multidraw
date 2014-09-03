@@ -15,6 +15,38 @@ var localConnectedClients = 0;
 var clients = {};
 var netUsage = 0;
 
+//compress all JS into one file on startup
+new compressor.minify({
+    type: 'uglifyjs',
+    fileIn: ['public/socket.io-1.0.6.min.js',
+	     'public/alertify.min.js',
+	     'public/jquery.hammer.min.js',
+	     'public/lzwCompress.js',
+	     'public/draw.js'
+	    ],
+    fileOut: 'public/draw.min.js',
+    callback: function(err, min){
+        if (err){
+	    console.log(err);
+	}
+    }
+});
+
+//compress css
+new compressor.minify({
+    type: 'clean-css',
+    fileIn: ['public/alertify.core.css',
+	     'public/alertify.default.css',
+	     'public/style.css'
+	    ],
+    fileOut: 'public/style.min.css',
+    callback: function(err, min){
+	if(err){
+	    console.log(err);
+	}
+    }
+});
+
 app.use(express.compress());
 app.use(express.static(__dirname + '/public', {maxAge: 60*60*24*1000}));
 app.use(express.logger());
