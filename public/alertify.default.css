@@ -82,7 +82,7 @@
 
 /* draw override */
 .alertify-logs {
-    position: absolute;
+    position: fixed;
     bottom: 50px;
     left: 20px;
 }

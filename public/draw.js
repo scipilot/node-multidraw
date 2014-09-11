@@ -15,6 +15,7 @@ $(function(){
     defaultName = "Guest",
     draggingTool = false,
     dragging = false;
+    alertify.set({ delay: 1000*30 });
 
     var pastDragX = 0, pastDragY = 0;
     
@@ -63,6 +64,7 @@ $(function(){
     });
 
     socket.on('chatmessage', function (data) {
+	console.log(data.user + ": " + data.message);
 	alertify.log(data.user + ": " + data.message);
     });
 
@@ -267,13 +269,14 @@ $(function(){
 	var message = $("#chatBox").val();
 	var user = $("#usernameInput").val();
 	if(user.length < 1){
-	    user = defaultName;
+	    user = defaultName + "-" + id;
 	}
 	
 	socket.emit('chatmessage', {
 	    message: message,
 	    user: user
 	});
+	alertify.log("You: " + message);
 	$('#chatBox').val("");
     }
 

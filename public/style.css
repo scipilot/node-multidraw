@@ -124,12 +124,11 @@ h3{
 
 #chatBox {
     position: fixed;
-    bottom: 0px;
-    left: 0px;
+    bottom: 10px;
+    left: 10px;
     width: 80%;
-    height: 20px;
-    font-size: 1.2em;
-    display: none; /* DISABLED chat */
+    height: 25px;
+    font-size: 1.3em;
 }
 
 #settingsPanel {
@@ -177,15 +176,6 @@ h3{
     border-radius: 5px 5px 0px 0px;
     color: #FFF;
     box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
-}
-
-#chatArea {
-    position: absolute;
-    bottom: 25px;
-    left: 20px;
-    height: 100%;
-    width: 45%;
-    pointer-events: none;
 }
 
 #usernameInput {
