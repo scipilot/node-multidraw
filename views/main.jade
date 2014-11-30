@@ -1,12 +1,12 @@
 doctype html
 html
   head
-    title Tim's Multiplayer Draw App
+    title udraw: Multiplayer Drawing
     meta(name="viewport" content="initial-scale=1")
     meta(name="description" content="Draw with everyone else in realtime on a HTML5 canvas")
-    meta(property="og:url" content="http://draw.timatooth.com")
-    meta(property="og:title" content="Multiplayer Draw")
-    meta(property="og:image" content="http://draw.timatooth.com/screenshot.png")
+    meta(property="og:url" content="https://udraw.me")
+    meta(property="og:title" content="udraw: Multiplayer Draw")
+    meta(property="og:image" content="https://udraw.me/screenshot.png")
     meta(property="og:image:width" content="1600")
     meta(property="og:image:height" content="1000")
     meta(property="og:description" content="Draw with everyone else online in realtime!")
@@ -35,14 +35,13 @@ html
       div#settingsPanelTab Settings
       label(for="usernameInput") Chat Name
       input(type="text" id="usernameInput" placeholder="Username: Guest")
-      
+
       table#serverStats
       div#bottomAttribution
         p
           a(id="statsShow" href="javascript:void(0)") Server Stats
-        p node-multidraw v0.5 by <a href="http://timatooth.com">Tim Sullivan</a>
+        p node-multidraw v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
     input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
-    script(src="http://code.jquery.com/jquery-2.1.1.min.js")
+    script(src="//code.jquery.com/jquery-2.1.1.min.js")
     script(src="draw.min.js")
-
