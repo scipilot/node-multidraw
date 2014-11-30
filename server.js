@@ -2,6 +2,8 @@ var port = process.env.PORT || 5000;
 console.log("Listening on port " + port);
 var http = require('http')
 var express = require('express'), app = express();
+var morgan = require('morgan'); //http logger module
+var compression = require('compression')
 var server = http.createServer(app).listen(port);
 var jade = require('jade');
 var io = require('socket.io').listen(server);
@@ -18,8 +20,7 @@ var netUsage = 0;
 //compress all JS into one file on startup
 new compressor.minify({
     type: 'uglifyjs',
-    fileIn: ['public/socket.io-1.0.6.min.js',
-	     'public/alertify.min.js',
+    fileIn: ['public/alertify.min.js',
 	     'public/jquery.hammer.min.js',
 	     'public/lzwCompress.js',
 	     'public/draw.js'
@@ -47,18 +48,25 @@ new compressor.minify({
     }
 });
 
-app.use(express.compress());
+app.use(compression())
 app.use(express.static(__dirname + '/public', {maxAge: 60*60*24*1000}));
-app.use(express.logger());
+app.use(morgan('dev'));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', {layout: false });
 app.enable('trust proxy');
 
+/* Main 'lobby' canvas */
 app.get('/', function(req, res){
     res.render('main.jade');
 });
+
+/* User canvas */
+app.get("/c/:canvasname", function (req, res, next) {
+    res.render('main.jade');
+});
+
 
 redisClient.on("error", function(err){
     console.log("Redis Error: " + err);
