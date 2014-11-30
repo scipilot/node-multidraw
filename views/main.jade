@@ -1,7 +1,10 @@
 doctype html
 html
   head
-    title udraw: Multiplayer Drawing
+    if canvasName
+      title #{canvasName} | udraw Multiplay Drawing
+    else
+      title udraw: Multiplayer Drawing
     meta(name="viewport" content="initial-scale=1")
     meta(name="description" content="Draw with everyone else in realtime on a HTML5 canvas")
     meta(property="og:url" content="https://udraw.me")
@@ -33,6 +36,8 @@ html
       h3 Note: Drawings are saved on the server. Come back any time!
     div#settingsPanel
       div#settingsPanelTab Settings
+      h2 You're drawing in
+      h3#canvasName #{canvasName}
       label(for="usernameInput") Chat Name
       input(type="text" id="usernameInput" placeholder="Username: Guest")
 
@@ -40,7 +45,7 @@ html
       div#bottomAttribution
         p
           a(id="statsShow" href="javascript:void(0)") Server Stats
-        p node-multidraw v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
+        p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
     input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
     script(src="//code.jquery.com/jquery-2.1.1.min.js")

@@ -50,7 +50,7 @@ new compressor.minify({
 
 app.use(compression())
 app.use(express.static(__dirname + '/public', {maxAge: 60*60*24*1000}));
-app.use(morgan('dev'));
+app.use(morgan('combined'));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -64,7 +64,7 @@ app.get('/', function(req, res){
 
 /* User canvas */
 app.get("/c/:canvasname", function (req, res, next) {
-    res.render('main.jade');
+    res.render('main.jade', {canvasName: req.params.canvasname});
 });
 
 
@@ -76,22 +76,29 @@ redisClient.on("error", function(err){
 redisClient.setnx("clientcount", 0);
 
 io.sockets.on('connection', function(socket){
-    var drawActions = [];
     localConnectedClients += 1;
     redisClient.incr("clientcount");
 
-    //TODO Need to optimise this
-    redisClient.lrange("drawactions", 0, -1, function(err, replies){
-	replies.forEach(function(reply, i){
-	    drawActions.push(JSON.parse(reply));
-	});
+    socket.on('drawActionHistory', function(data){
+	//client has asked for all the draw action history.
+	var drawActions = [];
+	var key = "drawactions:"+data.canvasName;
+	redisClient.lrange(key, 0, -1, function(err, replies){
+	    if(err){
+		console.log("Error fetching draw history key: " + key);
+		return;
+	    }
+	    replies.forEach(function(reply, i){
+		drawActions.push(JSON.parse(reply));
+	    });
 
-	//compress drawaction history data
-	var compressedActions = lzwCompress.pack(drawActions)
-	//send it
-	socket.emit('drawActionHistory', compressedActions);
-	//increment netusage tracker.
-	netUsage += sizeof(compressedActions);
+	    //compress drawaction history data
+	    var compressedActions = lzwCompress.pack(drawActions)
+	    //send it
+	    socket.emit('drawActionHistory', compressedActions);
+	    //increment netusage tracker.
+	    netUsage += sizeof(compressedActions);
+	});
     });
 
     socket.on('mousemove', function(data){
@@ -106,9 +113,8 @@ io.sockets.on('connection', function(socket){
 		    toY: data.y,
 		    color: data.color
 		};
-
-		redisClient.rpush("drawactions",
-				  JSON.stringify(drawAction));
+		var key = "drawactions:"+data.canvasName;
+		redisClient.rpush(key, JSON.stringify(drawAction));
 	    }
 	    
 	} else {
@@ -146,10 +152,12 @@ io.sockets.on('connection', function(socket){
 	    netUsageKB: (netUsage / 1000).toFixed(1),
 	    nodeConnections: localConnectedClients
 	};
-
+	
+	/*
 	multi.llen("drawactions", function(err, reply){
 	    data['drawStackSize'] = reply;
 	});
+	*/
 
 	multi.get('clientcount', function(err, reply){
 	    data['globalConnectedClients'] = reply;

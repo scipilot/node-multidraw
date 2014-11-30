@@ -14,6 +14,7 @@ $(function(){
     setColor = '#000';
     defaultName = "Guest",
     draggingTool = false,
+    canvasName = $('#canvasName').text(),
     dragging = false;
     alertify.set({ delay: 1000*30 });
 
@@ -30,10 +31,18 @@ $(function(){
     var clients = {};
     var cursors = {};
 
+    if(canvasName === ""){
+	canvasName = "lobby";
+	$('#canvasName').text('Main Lobby');
+    }
+
     var socket = io.connect();
 
     socket.on('connect', function(){
 	$('#bigTitle').text('Connected to server');
+	socket.emit('drawActionHistory', {
+	    canvasName: canvasName
+	});
     });
     
     socket.on('moving', function (data) {
@@ -75,7 +84,7 @@ $(function(){
 	$('#bigTitle').text("Rendering history...");
 	//offscreen canvas
 	var osc = document.createElement('canvas');
-	osc.width = 1600;
+	osc.width = 1900;
 	osc.height = 1000;
 	var osctx = osc.getContext('2d');
 
@@ -155,7 +164,8 @@ $(function(){
 		    'y': e.pageY,
 		    'drawing': drawing,
 		    'id': id,
-		    'color': setColor
+		    'color': setColor,
+		    'canvasName': canvasName
 		});
 		lastEmit = $.now();
 	    }
@@ -230,7 +240,7 @@ $(function(){
 	    $('#settingsPanel').animate({bottom: 0}, 200);
 	    settingsTabOpen = true;
 	} else {
-	    $('#settingsPanel').animate({bottom: -300}, 200);
+	    $('#settingsPanel').animate({bottom: -320}, 200);
 	    settingsTabOpen = false;
 	}
 	
