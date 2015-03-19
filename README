@@ -11,3 +11,17 @@ License: MIT
 Author: Tim Sullivan <tim@timatooth.com>
 
 Credit: tutorialzine for initial code.
+
+# Installation & Setup
+
+
+Install and run Redis: http://redis.io/download
+
+    redis-server
+
+Run the application via node:
+
+    cd node-multidraw
+    npm install
+    node server.js
+
