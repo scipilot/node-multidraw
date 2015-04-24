@@ -133,18 +133,16 @@ $(function () {
 	var prev = {};
 
 	canvas.on('mousedown',  function (e) {
-		pageX = e.pageX;
-		pageY = e.pageY;
-		mouseDown(e);
+		touchMouseDown(e, e.pageX, e.pageY);
 	});
 	canvas.on('touchstart', function (e) {
 		if (!e)	var e = event;
 		//		pageX = e.targetTouches[0].pageX; // from Apple's tutorials, but targetTouches doesn't exist?!
 		//		pageY = e.targetTouches[0].pageY;
-		pageX = e.originalEvent.pageX;
-		pageY = e.originalEvent.pageY;
-
-		touchMouseDown(e, pageX, pageY);
+		// First we need to move to the new touch point, without drawing. This emulates a mouse's "moving while up" (hover) which touch doesn't have.
+		// 	(otherwise we get a spurious line drawn between the last up point and this down point)
+		touchMouseMove(e, e.originalEvent.pageX, e.originalEvent.pageY);
+		touchMouseDown(e, e.originalEvent.pageX, e.originalEvent.pageY);
 	});
 	// handler either touch or mousedown
 	function touchMouseDown(e, pageX, pageY) {
@@ -164,12 +162,12 @@ $(function () {
 		pastDragY = pageY;
 	}
 
-	doc.bind('mouseup mouseleave', mouseUp);
+	doc.bind('mouseup mouseleave', touchMouseUp);
 	doc.bind('touchend', function(){
-		mouseUp();
+		touchMouseUp();
 	});
-
-	function mouseUp () {
+	// handles both touch or mouse up
+	function touchMouseUp () {
 		drawing = false;
 		dragging = false;
 	}
@@ -182,7 +180,7 @@ $(function () {
 	doc.on('touchmove', function (e) {
 		touchMouseMove(e, e.originalEvent.pageX, e.originalEvent.pageY);
 	});
-	// handler either touch or mouse move
+	// handles either touch or mouse move
 	function touchMouseMove(e, pageX, pageY){
 		if (!draggingTool) {
 			if ($.now() - lastEmit > 10) {
