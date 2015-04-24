@@ -25,3 +25,6 @@ Run the application via node:
     npm install
     node server.js
 
+To run it daemonised, use `forever`, `daemonize2` or this command form:
+
+    cd node-multidraw; nohup node server.js >/dev/null 2>&1 &
