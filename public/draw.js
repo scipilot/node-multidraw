@@ -131,9 +131,6 @@ $(function () {
 	});
 
 	var prev = {};
-	// tracks 'mouse' when using touch devices
-	var mouseIsDown;
-	var pageX, pageY;
 
 	canvas.on('mousedown',  function (e) {
 		pageX = e.pageX;
@@ -141,27 +138,19 @@ $(function () {
 		mouseDown(e);
 	});
 	canvas.on('touchstart', function (e) {
-		console.log('touchstart '+e);
-		console.log(e);
 		if (!e)	var e = event;
-		mouseIsDown = true;
-		//		pageX = e.targetTouches[0].pageX; // from Apple's docs, but doesn't exist!
+		//		pageX = e.targetTouches[0].pageX; // from Apple's tutorials, but targetTouches doesn't exist?!
 		//		pageY = e.targetTouches[0].pageY;
 		pageX = e.originalEvent.pageX;
 		pageY = e.originalEvent.pageY;
 
-		mouseDown(e);
+		touchMouseDown(e, pageX, pageY);
 	});
-	function mouseDown(e) {
-		console.log('down');
+	// handler either touch or mousedown
+	function touchMouseDown(e, pageX, pageY) {
 		e.preventDefault();
 		if (!draggingTool) {
 			drawing = true;
-			console.log(e);
-			console.log('pageX:'+pageX+' pageY:'+pageY);
-			console.log('e.pageX:'+e.pageX+' e.pageY:'+e.pageY);
-			console.log('e.screenX:'+e.pageX+' e.screenY:'+e.pageY);
-			console.log('e.offsetX:'+e.pageX+' e.offsetY:'+e.pageY);
 
 			prev.x = pageX;
 			prev.y = pageY;
@@ -177,12 +166,10 @@ $(function () {
 
 	doc.bind('mouseup mouseleave', mouseUp);
 	doc.bind('touchend', function(){
-		mouseIsDown = false;
 		mouseUp();
 	});
 
 	function mouseUp () {
-		console.log('mousup');
 		drawing = false;
 		dragging = false;
 	}
@@ -190,17 +177,13 @@ $(function () {
 	var lastEmit = $.now();
 
 	doc.on('mousemove', function (e) {
-		pageX = e.pageX;
-		pageY = e.pageY;
-		touchMouseMove(e);
+		touchMouseMove(e, e.pageX, e.pageY);
 	});
 	doc.on('touchmove', function (e) {
-		pageX = e.originalEvent.pageX;
-		pageY = e.originalEvent.pageY;
-		touchMouseMove(e);
+		touchMouseMove(e, e.originalEvent.pageX, e.originalEvent.pageY);
 	});
-	function touchMouseMove(e){
-		console.log('mouse move');
+	// handler either touch or mouse move
+	function touchMouseMove(e, pageX, pageY){
 		if (!draggingTool) {
 			if ($.now() - lastEmit > 10) {
 				socket.emit('mousemove', {
@@ -218,7 +201,6 @@ $(function () {
 			// not received in the socket.on('moving') event above
 
 			if (drawing) {
-console.log('drawing '+ 'prev.x:' + prev.x + 'prev.y:'+ prev.y + 'e.pageX:' + e.pageX + 'e.pageY:' + e.pageY);
 				drawLine(context, prev.x, prev.y, pageX, pageY, setColor);
 
 				prev.x = pageX;
