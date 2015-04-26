@@ -12,6 +12,7 @@ var redis = require("redis");
 var redisClient = redis.createClient();
 var lzwCompress = require('lzwcompress');
 var compressor = require('node-minify');
+// var multer  = require('multer'); todo: for upload images (or use CMS?)
 
 var localConnectedClients = 0;
 var clients = {};
@@ -51,11 +52,14 @@ new compressor.minify({
 app.use(compression())
 app.use(express.static(__dirname + '/public', {maxAge: 60 * 60 * 24 * 1000}));
 app.use(morgan('combined'));
+//app.use(multer({ dest: './uploads/'}))
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', {layout: false });
 app.enable('trust proxy');
+
+// ROUTES -----------------------------------------------------------
 
 /* Main 'lobby' canvas */
 app.get('/', function (req, res) {
@@ -87,6 +91,15 @@ app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 		canvasName: req.params.sessionName+'.'+req.params.pageNo
 	});
 });
+
+//// BG images TODO
+//app.post('/upload', function(req, res, next) {
+//	console.log('upload');
+//	console.log(req.body);
+//	console.log(req.files);
+//});
+
+// -----------------------------------------------------------------
 
 redisClient.on("error", function (err) {
 	console.log("Redis Error: " + err);

@@ -18,24 +18,29 @@ html
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     div#adminPanel
       h1#bigTitle Administration
-      h2 You're running
-      h3#sessionName #{sessionName}
+      h2#sessionName #{sessionName}
       h3#pageNo #{pageNo}
+      //p Background:
+      //  select(id="setBackground")
+      //    option(value="test1.png") Test 1
+      //    option(value="test2.png") Test 2
+      //    option(value="test3.png") Test 3
       p
-        a(id="nextPage" href="javascript:void(0)") >> Next page
-
+        a(id="nextPage" href="javascript:void(0)") Next screen &gt;
+      p
         a(id="clearButton" href="javascript:void(0)") X Clear canvas
 
-      p Create a new test session
-      label(for="newSessionName") Test Session Name
-        input(type="text" id="newSessionName" placeholder="")
-        button(id="newSessionButton") Go
+      hr
+
+      p Start a new Test Session
+      label(for="newSessionName") Session Name
+      input(type="text" id="newSessionName" placeholder="")
+      button(id="newSessionButton") Go
 
     div#settingsPanel
       div#settingsPanelTab Settings
 
-      label(for="usernameInput") Chat Name
-      input(type="text" id="usernameInput" placeholder="Username: Guest")
+      h2#canvasName #{canvasName}
 
       table#serverStats
       div#bottomAttribution
@@ -43,7 +48,6 @@ html
           a(id="statsShow" href="javascript:void(0)") Server Stats
         p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
-    input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
     script(src="//code.jquery.com/jquery-2.1.1.min.js")
     script(src="/socket.io/socket.io.js")
     script(src="/draw.min.js")

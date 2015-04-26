@@ -292,6 +292,13 @@ $(function () {
 		// todo: auth
 		socket.emit('create', {sessionName: $('#newSessionName').val()});
 	});
+//	$('#setBackground').change(function(){
+//		// todo: auth
+//		socket.emit('background', {
+//			sessionName: sessionName,
+//			pageNo: pageNo,
+//			file:$("#setBackground option:selected").val()});
+//	});
 	$('#nextPage').click(function(){
 		// todo: auth
 		socket.emit('next', {sessionName: sessionName, pageNo: pageNo});
@@ -317,48 +324,5 @@ $(function () {
 	};
 
 	document.addEventListener("touchmove", preventBehavior, false);
-
-	/**
-	 Chat related
-	 */
-	$('#chatBox').keyup(function (e) {
-		if (e.keyCode == 13) {
-			sendMessage();
-		}
-	});
-
-	$('#statsShow').click(function () {
-		$('#serverStats').toggle();
-	});
-
-	function sendMessage() {
-		var message = $("#chatBox").val();
-		var user = $("#usernameInput").val();
-		if (user.length < 1) {
-			user = defaultName + "-" + id;
-		}
-
-		socket.emit('chatmessage', {
-			message: message,
-			user: user
-		});
-		alertify.log("You: " + message);
-		$('#chatBox').val("");
-	}
-
-	//enable/disable the dragging tool
-	$('#handTool').click(function () {
-		draggingTool = !draggingTool; //toggle state
-		if (draggingTool) {
-			$('canvas').addClass("canvas-draggable");
-			$('#handTool').addClass('active');
-		} else {
-			$('canvas').removeClass("canvas-draggable");
-			$('#handTool').removeClass('active');
-			//if they turned off the hand tool animate back
-			//this is probably temp untill I get tiling working
-			$('#paper').animate({top: 0, left: 0});
-		}
-	});
 
 });
