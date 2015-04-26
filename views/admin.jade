@@ -18,19 +18,23 @@ html
     link(rel="stylesheet" href="/style.min.css")
   body
     div#cursors
+    if sessionName && pageNo
+      div#bg-image(style="background-image: url(\"/uploads/test#{pageNo}.png\")")
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     div#adminPanel
       h1#bigTitle Administration
-      h2 Test session: #{sessionName} / screen #{pageNo}
-      p
-        button(id="clearButton" href="javascript:void(0)") X Clear canvas
-        button(id="nextPage" href="javascript:void(0)" style="float:right") Next page &gt;
-
-      hr
-      p Create a new test session
-      label(for="newSessionName") Test Session Name
-        input(type="text" id="newSessionName" placeholder="")
-        button(id="newSessionButton") Go
+      if sessionName
+        h2 Test session: #{sessionName} / screen #{pageNo}
+        div.session-controls
+          button(id="clearButton") Clear!
+          button(id="endSessionButton") End!
+          button(id="nextPage") Proceed to next screen &gt;
+      else
+        div.session-controls
+          h2 Start a new test session
+          label(for="newSessionName") Session Name:
+          input(type="text" id="newSessionName" placeholder="")
+          button(id="newSessionButton") Go
 
     div#settingsPanel
       div#settingsPanelTab Settings

@@ -18,6 +18,8 @@ html
     link(rel="stylesheet" href="/style.min.css")
   body
     div#cursors
+    if sessionName && pageNo
+      div#bg-image(style="background-image: url(\"/uploads/test#{pageNo}.png\")")
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     //div#instructions
       //h1#bigTitle Connecting...

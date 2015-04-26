@@ -212,6 +212,14 @@ io.sockets.on('connection', function (socket) {
 		guidedRedirect(data.sessionName, Number(data.pageNo)+1);
 	});
 
+	// Admin: finish a Test Session
+	socket.on('end', function (data) {
+
+		// todo: USER "WELL DONE!" PAGE. socket.broadcast.emit('redirect', {url:'/s/'+sessionName+'/'+pageNo});
+		// ADMIN: back to home
+		socket.emit('redirect', {url:'/a/'});
+	});
+
 	function guidedRedirect(sessionName, pageNo){
 		// admin-guided mode
 		socket.broadcast.emit('redirect', {url:'/s/'+sessionName+'/'+pageNo});
