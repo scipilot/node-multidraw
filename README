@@ -28,3 +28,14 @@ Run the application via node:
 To run it daemonised, use `forever`, `daemonize2` or this command form:
 
     cd node-multidraw; nohup node server.js >/dev/null 2>&1 &
+
+# Usage
+
+Once running visit
+
+`localhost:5000` for default canvas: "main lobby"
+
+or
+
+`localhost:5000/c/room-name` to create a new canvas
+
