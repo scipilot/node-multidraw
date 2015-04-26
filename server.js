@@ -178,6 +178,23 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('pong');
 	});
 
+	// delete the canvas history
+	socket.on('clear', function (data) {
+		// remove data
+		var key = "drawactions:" + data.canvasName;
+		redisClient.del(key);
+
+		// tell canvases to visually clear
+		// The socket.broadcast sends to ALL BUT the 'current' client which sent the 'clear'. I find this obscure, not in the socket.io docs.
+		// socket.broadcast.emit('cleared', data);
+		// The socket.emit goes back to the 'current' client
+		// socket.emit('cleared', data);
+		// This sends to ALL sockets
+		io.sockets.emit('cleared', data);
+		// todo: how to broadcast only to this canvas? (But... currently the whole app doesn't respect the canvas ID, even mouse moves go to all clients regardless of canvas/URL. Maybe a redis hash of sockets-canvases.)
+		// 			 Quick Workaround: I'm relying on the client to validate the data.canvasName
+	});
+
 	socket.on('disconnect', function () {
 		localConnectedClients -= 1;
 		redisClient.decr("clientcount");

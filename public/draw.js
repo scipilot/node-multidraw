@@ -72,6 +72,14 @@ $(function () {
 		clients[data.id].updated = $.now();
 	});
 
+	socket.on('cleared', function(data){
+		console.log('cleared '+data.canvasName);
+		if(data.canvasName == canvasName)	clearCanvas();
+	});
+	function clearCanvas(){
+		context.clearRect(0, 0, canvas.width(), canvas.height());
+	}
+
 	socket.on('chatmessage', function (data) {
 		console.log(data.user + ": " + data.message);
 		alertify.log(data.user + ": " + data.message);
@@ -267,7 +275,12 @@ $(function () {
 			$('#settingsPanel').animate({bottom: -320}, 200);
 			settingsTabOpen = false;
 		}
+	});
 
+	$('#clearButton').click(function(){
+		// todo: security only allow "admin" peer to do this - how? (without an auth plugin) use the client 'id'? this will only work for the browser 'session'
+		// 			 perhaps only allow "creator" to clear it, or move the option to an authenticated admin page.
+		socket.emit('clear', {canvasName: canvasName})
 	});
 
 	var paper = document.getElementById('paper');
