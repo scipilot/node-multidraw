@@ -240,4 +240,5 @@ div#bg-image{
     width:100%;
     height:1000px;
     /*background-image: url("/uploads/test1.png");*/
+    background-repeat: no-repeat;
 }
