@@ -66,7 +66,27 @@ app.get('/', function (req, res) {
 app.get("/c/:canvasname", function (req, res, next) {
 	res.render('main.jade', {canvasName: req.params.canvasname});
 });
+/* User guided session */
+app.get("/s/:sessionName/:pageNo", function (req, res, next) {
+	res.render('session.jade', {
+		sessionName: req.params.sessionName,
+		pageNo: req.params.pageNo,
+		canvasName: req.params.sessionName+'.'+req.params.pageNo
+	});
+});
 
+/* Admin */
+app.get("/a/", function (req, res, next) {
+	res.render('admin.jade', {});
+});
+/* Admin view-canvas */
+app.get("/a/:sessionName/:pageNo", function (req, res, next) {
+	res.render('admin.jade', {
+		sessionName: req.params.sessionName,
+		pageNo: req.params.pageNo,
+		canvasName: req.params.sessionName+'.'+req.params.pageNo
+	});
+});
 
 redisClient.on("error", function (err) {
 	console.log("Redis Error: " + err);
@@ -177,6 +197,26 @@ io.sockets.on('connection', function (socket) {
 	socket.on('ping', function (data) {
 		socket.emit('pong');
 	});
+
+	// Admin: create a new Test Session, and take the user to it
+	socket.on('create', function (data) {
+		// register a new canvas (for admin listing)
+		redisClient.rpush("sessions", data.sessionName);
+
+		// start at page 0
+		guidedRedirect(data.sessionName, 0);
+	});
+
+	// Admin: next canvas page, and take the user to it
+	socket.on('next', function (data) {
+		guidedRedirect(data.sessionName, Number(data.pageNo)+1);
+	});
+
+	function guidedRedirect(sessionName, pageNo){
+		// admin-guided mode
+		socket.broadcast.emit('redirect', {url:'/s/'+sessionName+'/'+pageNo});
+		socket.emit('redirect', {url:'/a/'+sessionName+'/'+pageNo});
+	}
 
 	// delete the canvas history
 	socket.on('clear', function (data) {

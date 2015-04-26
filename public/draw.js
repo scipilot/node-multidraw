@@ -15,8 +15,14 @@ $(function () {
 	defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
+		sessionName = $('#sessionName').text(),
+		pageNo = $('#pageNo').text(),
 		dragging = false;
 	alertify.set({ delay: 1000 * 30 });
+
+	var settings = {
+		lineWidth:4
+	};
 
 	var pastDragX = 0, pastDragY = 0;
 
@@ -39,7 +45,7 @@ $(function () {
 	var socket = io.connect();
 
 	socket.on('connect', function () {
-		$('#bigTitle').text('Connected to server');
+		$('#status').text('Connected to server');
 		socket.emit('drawActionHistory', {
 			canvasName: canvasName
 		});
@@ -73,12 +79,15 @@ $(function () {
 	});
 
 	socket.on('cleared', function(data){
-		console.log('cleared '+data.canvasName);
 		if(data.canvasName == canvasName)	clearCanvas();
 	});
 	function clearCanvas(){
 		context.clearRect(0, 0, canvas.width(), canvas.height());
 	}
+
+	socket.on('redirect', function(data){
+		window.location = data.url;
+	});
 
 	socket.on('chatmessage', function (data) {
 		console.log(data.user + ": " + data.message);
@@ -87,9 +96,9 @@ $(function () {
 
 	socket.on('drawActionHistory', function (compressedHistory) {
 		var i = 0;
-		$('#bigTitle').text("Decompressing History...");
+		$('#status').text("Decompressing History...");
 		var history = lzwCompress.unpack(compressedHistory);
-		$('#bigTitle').text("Rendering history...");
+		$('#status').text("Rendering history...");
 		//offscreen canvas
 		var osc = document.createElement('canvas');
 		osc.width = 1900;
@@ -99,6 +108,7 @@ $(function () {
 		for (i = 0; i < history.length; i += 1) {
 			osctx.beginPath();
 			osctx.strokeStyle = history[i].color;
+			osctx.lineWidth = settings.lineWidth;
 			osctx.moveTo(history[i].fromX, history[i].fromY);
 			osctx.lineTo(history[i].toX, history[i].toY);
 			osctx.stroke();
@@ -106,8 +116,7 @@ $(function () {
 		}
 
 		context.drawImage(osc, 0, 0);
-		$('#bigTitle').text("Draw anywhere!");
-
+		$('#status').text("");
 	});
 
 	/*Respond to server 'pings' */
@@ -242,6 +251,7 @@ $(function () {
 	function drawLine(ctx, fromx, fromy, tox, toy, color) {
 		ctx.beginPath(); //need to enclose in begin/close for colour settings to work
 		ctx.strokeStyle = color;
+		ctx.lineWidth = settings.lineWidth;
 		ctx.moveTo(fromx, fromy);
 		ctx.lineTo(tox, toy);
 		ctx.stroke();
@@ -277,6 +287,15 @@ $(function () {
 		}
 	});
 
+	// Admin panel
+	$('#newSessionButton').click(function(){
+		// todo: auth
+		socket.emit('create', {sessionName: $('#newSessionName').val()});
+	});
+	$('#nextPage').click(function(){
+		// todo: auth
+		socket.emit('next', {sessionName: sessionName, pageNo: pageNo});
+	});
 	$('#clearButton').click(function(){
 		// todo: security only allow "admin" peer to do this - how? (without an auth plugin) use the client 'id'? this will only work for the browser 'session'
 		// 			 perhaps only allow "creator" to clear it, or move the option to an authenticated admin page.

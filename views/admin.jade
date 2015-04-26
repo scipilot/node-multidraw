@@ -1,8 +1,8 @@
 doctype html
 html
   head
-    if canvasName
-      title #{canvasName} | udraw Multiplay Drawing
+    if sessionName
+      title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
     else
       title udraw: Multiplayer Drawing
     meta(name="viewport" content="initial-scale=1")
@@ -15,35 +15,27 @@ html
     meta(property="og:description" content="Draw with everyone else online in realtime!")
     link(rel="stylesheet" href="/style.min.css")
   body
-    div#colourPanel
-      div#colourPanelTab C
-      p
-        strong Colour
-      ul
-        li#c-green.c Green
-        li#c-blue.c Blue
-        li#c-orange.c Orange
-        li#c-pink.c Pink
-        li#c-black.c Black
-        li#c-yellow.c Yellow
-        li#c-red.c Red
-      div#handTool
-    div#cursors
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
-    div#instructions
-      h1#bigTitle Draw Anywhere!
-      h2 You will see everyone else drawing
-      h3 Note: Drawings are saved on the server. Come back any time!
-      p#status
+    div#adminPanel
+      h1#bigTitle Administration
+      h2 You're running
+      h3#sessionName #{sessionName}
+      h3#pageNo #{pageNo}
+      p
+        a(id="nextPage" href="javascript:void(0)") >> Next page
+
+        a(id="clearButton" href="javascript:void(0)") X Clear canvas
+
+      p Create a new test session
+      label(for="newSessionName") Test Session Name
+        input(type="text" id="newSessionName" placeholder="")
+        button(id="newSessionButton") Go
+
     div#settingsPanel
       div#settingsPanelTab Settings
-      h2 You're drawing in
-      h3#canvasName #{canvasName}
+
       label(for="usernameInput") Chat Name
       input(type="text" id="usernameInput" placeholder="Username: Guest")
-
-      p
-        a(id="clearButton" href="javascript:void(0)") Clear canvas
 
       table#serverStats
       div#bottomAttribution

@@ -14,7 +14,6 @@ Credit: tutorialzine for initial code.
 
 # Installation & Setup
 
-
 Install and run Redis: http://redis.io/download
 
     redis-server
@@ -27,15 +26,47 @@ Run the application via node:
 
 To run it daemonised, use `forever`, `daemonize2` or this command form:
 
-    cd node-multidraw; nohup node server.js >/dev/null 2>&1 &
+    `cd node-multidraw; nohup node server.js >/dev/null 2>&1 &`
 
 # Usage
 
 Once running visit
 
-`localhost:5000` for default canvas: "main lobby"
+    `localhost:5000` for default canvas: "main lobby"
 
 or
 
-`localhost:5000/c/room-name` to create a new canvas
+    `localhost:5000/c/room-name` to implicitly create a new canvas
 
+## Guided mode
+
+For the assisted learning model, the following route is the admin screen:
+
+    `localhost:5000/a/`
+
+Click 'new session' with a user connected, to begin a new test/training session. Everyone will be redirected to:
+
+    `localhost:5000/a/SESSION/PAGE` (admin)
+    `localhost:5000/s/SESSION/PAGE` (user)
+
+where `SESSION` is the session name the admin made up, and `PAGE` will initially be 0.
+The canvas name stored is `session.page`.
+
+The admin administers the test, then clicks 'Next Page', again everyone is redirected to a new canvas.
+
+The admin can go back through previous pages to review/print analyse the test subject's performance.
+
+# TODO
+
+For Alpha:
+
+- Admin screen listing previous user sessions to browse & review
+- upload BG image
+- read-only mode to review/print canvas
+
+Later:
+
+- authentication
+- prepared sequence of BG images (a preset test)
+- convert to new multi-draw project
+- implement proper partitioning of canvases (sessions) and connections
