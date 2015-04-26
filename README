@@ -38,7 +38,10 @@ or
 
     `localhost:5000/c/room-name` to implicitly create a new canvas
 
-## Guided mode
+## Guided mode (assisted learning extension)
+
+Author: Pip Jones
+Status: WIP / early alpha!
 
 For the assisted learning model, the following route is the admin screen:
 
@@ -50,22 +53,27 @@ Click 'new session' with a user connected, to begin a new test/training session.
     `localhost:5000/s/SESSION/PAGE` (user)
 
 where `SESSION` is the session name the admin made up, and `PAGE` will initially be 0.
-The canvas name stored is `session.page`.
+The canvas name stored is `SESSION.PAGE`.
 
 The admin administers the test, then clicks 'Next Page', again everyone is redirected to a new canvas.
 
 The admin can go back through previous pages to review/print analyse the test subject's performance.
 
+---
+
 # TODO
 
-For Alpha:
+For Assisted Learning Alpha trial:
 
 - Admin screen listing previous user sessions to browse & review
-- upload BG image
+- upload BG image (NO! provide a hardcoded list of URLS - this will come from the CMS)
 - read-only mode to review/print canvas
 
 Later:
-
+- Allow the screens to be rendered from another website - more like a JQuery plugin which calls this codebase via socket/API.
+i.e. separating the page-load/rendering from the drawing functionality.
+I want to be able to run the system from another existing web application which hosts the
+assitive learning test structure, content and records the results.
 - authentication
 - prepared sequence of BG images (a preset test)
 - convert to new multi-draw project
