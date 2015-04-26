@@ -15,8 +15,8 @@ $(function () {
 	defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
-		sessionName = $('#sessionName').text(),
-		pageNo = $('#pageNo').text(),
+		//sessionName = $('#sessionName').text(),	// moved to template. is that better or worse?! (they'll need to be in every template...)
+		//pageNo = $('#pageNo').text(),						// I want a view-model
 		dragging = false;
 	alertify.set({ delay: 1000 * 30 });
 

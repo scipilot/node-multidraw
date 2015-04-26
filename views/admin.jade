@@ -1,6 +1,8 @@
 doctype html
 html
   head
+    script(type='text/javascript').
+      var sessionName = '#{sessionName}';var pageNo = #{pageNo};
     if sessionName
       title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
     else
@@ -15,17 +17,16 @@ html
     meta(property="og:description" content="Draw with everyone else online in realtime!")
     link(rel="stylesheet" href="/style.min.css")
   body
+    div#cursors
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     div#adminPanel
       h1#bigTitle Administration
-      h2 You're running
-      h3#sessionName #{sessionName}
-      h3#pageNo #{pageNo}
+      h2 Test session: #{sessionName} / screen #{pageNo}
       p
-        a(id="nextPage" href="javascript:void(0)") >> Next page
+        button(id="clearButton" href="javascript:void(0)") X Clear canvas
+        button(id="nextPage" href="javascript:void(0)" style="float:right") Next page &gt;
 
-        a(id="clearButton" href="javascript:void(0)") X Clear canvas
-
+      hr
       p Create a new test session
       label(for="newSessionName") Test Session Name
         input(type="text" id="newSessionName" placeholder="")
@@ -34,8 +35,7 @@ html
     div#settingsPanel
       div#settingsPanelTab Settings
 
-      label(for="usernameInput") Chat Name
-      input(type="text" id="usernameInput" placeholder="Username: Guest")
+      h2#canvasName #{canvasName}
 
       table#serverStats
       div#bottomAttribution
@@ -43,7 +43,6 @@ html
           a(id="statsShow" href="javascript:void(0)") Server Stats
         p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
-    input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
     script(src="//code.jquery.com/jquery-2.1.1.min.js")
     script(src="/socket.io/socket.io.js")
     script(src="/draw.min.js")
