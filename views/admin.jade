@@ -23,15 +23,18 @@ html
     if sessionName
       canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
       div#adminPanel
-        h1#bigTitle Administration
+        h1#bigTitle Remote Test Administration
         h2 Test session: #{sessionName} / screen #{pageNo}
+        h2  User screen:&nbsp;
+          a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
+        br
         div.session-controls
           button(id="clearButton") Clear!
           button(id="endSessionButton") End!
           button(id="nextPage") Proceed to next screen &gt;
     else
       div#sessionPanel
-        h1#bigTitle Administration
+        h1#bigTitle Remote Test Administration
         div.session-controls
           h2 Start a new test session
           label(for="newSessionName") Session Name:
