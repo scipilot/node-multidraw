@@ -230,6 +230,22 @@ h3{
     z-index: 9;
 }
 
+#sessionPanel {
+    margin: 20px auto 0 auto;
+    width: 50%;
+    opacity: 1;
+    border-radius: 10px;
+    padding-left: 10px;
+    background-color: #FFF;
+    color: #000000;
+    box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    z-index: 10;
+}
+div.session-list{
+    height: 400px;
+    overflow-y: scroll;
+}
+
 .session-controls button {
   margin: 0 0 0 8px;
   padding: 2px 3px;

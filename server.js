@@ -48,7 +48,7 @@ new compressor.minify({
 	}
 });
 
-app.use(compression())
+app.use(compression());
 app.use(express.static(__dirname + '/public', {maxAge: 60 * 60 * 24 * 1000}));
 app.use(morgan('combined'));
 
@@ -77,7 +77,13 @@ app.get("/s/:sessionName/:pageNo", function (req, res, next) {
 
 /* Admin */
 app.get("/a/", function (req, res, next) {
-	res.render('admin.jade', {});
+	getSessionList(function(sessions){
+		res.render('admin.jade', {
+			sessionName: '',
+			pageNo: 0,
+			sessionList:sessions
+		});
+	});
 });
 /* Admin view-canvas */
 app.get("/a/:sessionName/:pageNo", function (req, res, next) {
@@ -274,4 +280,14 @@ function sizeof(object) {
 		}
 	}
 	return bytes;
+}
+
+// Modelling
+
+function getSessionList(cb){
+//	return [{name:'foof'},{name:'oof'}];
+	return redisClient.lrange("sessions", 0 , -1, function(err, replies){
+		console.log(replies);
+		cb(replies);
+	});
 }

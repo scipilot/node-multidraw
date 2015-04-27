@@ -2,7 +2,7 @@ doctype html
 html
   head
     script(type='text/javascript').
-      var sessionName = '#{sessionName}';var pageNo = #{pageNo};
+      var canvasName = '#{canvasName}'; var sessionName = '#{sessionName}'; var pageNo = #{pageNo};
     if sessionName
       title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
     else
@@ -20,21 +20,33 @@ html
     div#cursors
     if sessionName && pageNo
       div#bg-image(style="background-image: url(\"/uploads/test#{pageNo}.png\")")
-    canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
-    div#adminPanel
-      h1#bigTitle Administration
-      if sessionName
+    if sessionName
+      canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
+      div#adminPanel
+        h1#bigTitle Administration
         h2 Test session: #{sessionName} / screen #{pageNo}
         div.session-controls
           button(id="clearButton") Clear!
           button(id="endSessionButton") End!
           button(id="nextPage") Proceed to next screen &gt;
-      else
+    else
+      div#sessionPanel
+        h1#bigTitle Administration
         div.session-controls
           h2 Start a new test session
           label(for="newSessionName") Session Name:
           input(type="text" id="newSessionName" placeholder="")
           button(id="newSessionButton") Go
+        br
+        hr
+        br
+        div.session-list
+          h2 Review a previous session:
+          table
+            each row in sessionList
+              tr
+                td
+                  a(href="/a/#{row}/0") #{row}
 
     div#settingsPanel
       div#settingsPanelTab Settings
@@ -49,4 +61,6 @@ html
         p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
     script(src="//code.jquery.com/jquery-2.1.1.min.js")
     script(src="/socket.io/socket.io.js")
-    script(src="/draw.min.js")
+    if sessionName
+      script(src="/draw.min.js")
+    script(src="/admin.js")
