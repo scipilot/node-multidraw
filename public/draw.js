@@ -85,6 +85,11 @@ $(function () {
 		context.clearRect(0, 0, canvas.width(), canvas.height());
 	}
 
+	// note this is common with admin. parent class?
+	socket.on('redirect', function(data){
+		window.location = data.url;
+	});
+
 	socket.on('chatmessage', function (data) {
 		console.log(data.user + ": " + data.message);
 		alertify.log(data.user + ": " + data.message);
