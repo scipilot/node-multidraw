@@ -1,0 +1,16 @@
+head
+  script(type='text/javascript').
+    var canvasName = '#{canvasName}'; var sessionName = '#{sessionName}'; var pageNo = #{pageNo};
+  if sessionName
+    title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
+  else
+    title udraw: Multiplayer Drawing
+  meta(name="viewport" content="initial-scale=1")
+  meta(name="description" content="Draw with everyone else in realtime on a HTML5 canvas")
+  meta(property="og:url" content="https://udraw.me")
+  meta(property="og:title" content="udraw: Multiplayer Draw")
+  meta(property="og:image" content="https://udraw.me/screenshot.png")
+  meta(property="og:image:width" content="1600")
+  meta(property="og:image:height" content="1000")
+  meta(property="og:description" content="Draw with everyone else online in realtime!")
+  link(rel="stylesheet" href="/style.min.css")
