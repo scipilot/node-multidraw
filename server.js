@@ -127,6 +127,24 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 
+	// admin has sent the next test presentation
+	socket.on('stimulus', function (data) {
+		//console.log("stimulus set:");
+		//console.log(data);
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			// todo send the actual stimulus presentation index / content / filename
+ 			//console.log("fetched session hash:");
+			//console.log(replies);
+			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
+			// send to all clients
+			io.sockets.emit('stimulus', {
+				"style": replies[0],
+				"text": data.text,
+				"filename": data.text
+			})
+		});
+	});
+
 	socket.on('mousemove', function (data) {
 		if (data.id in clients) {
 			var client = clients[data.id];
@@ -206,8 +224,12 @@ io.sockets.on('connection', function (socket) {
 
 	// Admin: create a new Test Session, and take the user to it
 	socket.on('create', function (data) {
-		// register a new canvas (for admin listing)
+
+		// todo: wrap session storage in a model
+		// index a new canvas (for admin listing)
 		redisClient.rpush("sessions", data.sessionName);
+		// can you index 'object' instances automatically? (redis noob!)
+		redisClient.hmset("session:"+data.sessionName, {"presentation": data.presentation});
 
 		// start at page 0
 		guidedRedirect(data.sessionName, 0);
@@ -285,7 +307,6 @@ function sizeof(object) {
 // Modelling
 
 function getSessionList(cb){
-//	return [{name:'foof'},{name:'oof'}];
 	return redisClient.lrange("sessions", 0 , -1, function(err, replies){
 		console.log(replies);
 		cb(replies);

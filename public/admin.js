@@ -1,3 +1,6 @@
+// Cut-down version of the client end socket functions, needed for the admin screens.
+// todo: there is some overlap - could be a common one?
+
 var adminSocket = io.connect();
 
 adminSocket.on('redirect', function(data){
@@ -9,8 +12,12 @@ adminSocket.on('redirect', function(data){
 // 			 perhaps only allow "creator" to clear it, or move the option to an authenticated admin page.
 // 			Currently - the buttons are only rendered in the admin view, but this isn't secure.
 $('#newSessionButton').click(function(){
+	console.log('p='+$('#sessionPresentation option:selected').val());
 	// todo: auth
-	adminSocket.emit('create', {sessionName: $('#newSessionName').val()});
+	adminSocket.emit('create', {
+		sessionName: $('#newSessionName').val(),
+		presentation: $('#sessionPresentation option:selected').val()
+	});
 });
 $('#nextPage').click(function(){
 	// todo: auth
@@ -23,4 +30,11 @@ $('#clearButton').click(function(){
 $('#endSessionButton').click(function(){
 	// todo: auth
 	adminSocket.emit('end', {sessionName: sessionName})
+});
+$('#stimulusButton').click(function(){
+	// todo: auth
+	adminSocket.emit('stimulus', {
+		sessionName: sessionName,
+		text: $('#stimulusText').val()
+	})
 });

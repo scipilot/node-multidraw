@@ -49,6 +49,10 @@ $(function () {
 		socket.emit('drawActionHistory', {
 			canvasName: canvasName
 		});
+// TODO: now sent from admin-UI on demand. On-connect would be from a DB/CMS/preset-list (later...?)
+//		socket.emit('stimulus', {
+//			sessionName: sessionName
+//		});
 	});
 
 	socket.on('moving', function (data) {
@@ -118,6 +122,27 @@ $(function () {
 
 		context.drawImage(osc, 0, 0);
 		$('#status').text("");
+	});
+
+	// server sent us the test stimulus: word/image background
+	// show this in the right format
+	// todo - move this out to modular strategies, we will definitely add more of these stimulus presentation methods
+	socket.on('stimulus', function (stimulus) {
+		//console.log('received stimulus: ');
+		console.log(stimulus);
+		if(stimulus.style == 1){
+			// Text
+			$('div#session-bg-text')
+				.text(stimulus.text)
+				.css("display", "inherit");
+		}
+		else if (stimulus.style == 2){
+			// Image
+			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');
+			$('div#session-bg-image')
+				.css('background-image: url(\"/uploads/test'+pageNo+'.png')
+				.css("display", "inherit");
+		}
 	});
 
 	/*Respond to server 'pings' */

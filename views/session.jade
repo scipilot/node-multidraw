@@ -6,7 +6,9 @@ html
   body
     div#cursors
     if sessionName && pageNo
-      div#bg-image(style="background-image: url(\"/uploads/test#{pageNo}.png\")")
+      div#session-bg-image
+      div#session-bg-text
+        span
     canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
     //div#instructions
       //h1#bigTitle Connecting...
