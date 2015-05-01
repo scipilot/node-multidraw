@@ -254,6 +254,7 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	// Admin: create a new Test Session, and take the user to it
+	// TODO: AUTH!
 	socket.on('create', function (data) {
 
 		// todo: wrap session storage in a model
@@ -264,6 +265,38 @@ io.sockets.on('connection', function (socket) {
 
 		// start at page 0
 		guidedRedirect(data.sessionName, 0);
+	});
+
+	// Admin: delete a previous Test Session
+	// TODO: AUTH!
+	socket.on('deleteSession', function (data) {
+		// todo: wrap session storage in a model
+
+		// 1. Remove the session from the 'sessions' index
+		redisClient.lrem("sessions", 1, data.sessionName);
+
+		// 2. Delete the "session:"+data.sessionName key
+		redisClient.del("session:"+data.sessionName);
+
+		// 3. Delete all "session:"+sessionName+":"+pageNo keys
+		redisClient.keys("session:"+data.sessionName+":*", function(err, replies){
+			// console.log("fetched page keys:");
+			// console.log(replies);
+			for(var i in replies){
+				//console.log("deleting key : "+replies[i]);
+				redisClient.del(replies[i]);
+			}
+		});
+
+		// 4. Delete the canvas drawing history for "drawactions:"+canvasName (canvasName = sessionName+"."+pageNo)
+		redisClient.keys("drawactions:"+data.sessionName+".*", function(err, replies){
+			for(var i in replies){
+				//console.log("deleting "+replies[i]);
+				redisClient.del(replies[i], function(err, replies){
+					//console.log("deleted "+replies+" drawactions:");
+				});
+			}
+		});
 	});
 
 	// Admin: next canvas page, and take the user to it

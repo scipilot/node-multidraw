@@ -11,6 +11,14 @@ adminSocket.on('redirect', function(data){
 // todo: security only allow "admin" to do this - how? (without an auth plugin) use the client 'id'? this will only work for the browser 'session'
 // 			 perhaps only allow "creator" to clear it, or move the option to an authenticated admin page.
 // 			Currently - the buttons are only rendered in the admin view, but this isn't secure.
+$('a.deleteSession').click(function(){
+	// todo: auth
+	adminSocket.emit('deleteSession', {
+		sessionName: $(this).data('session-name')
+	});
+	// todo reload the list...
+	window.location = window.location;
+});
 $('#newSessionButton').click(function(){
 	//console.log('p='+$('#sessionPresentation option:selected').val());
 	// todo: auth

@@ -51,10 +51,15 @@ html
         div.session-list
           h2 Review a previous session:
           table
+            tr
+              th View
+              th Delete
             each row in sessionList
               tr
                 td
                   a(href="/a/#{row}/0") #{row}
+                td
+                  a(class="deleteSession" data-session-name="#{row}" href="javascript:void(0);") X
 
     div#settingsPanel
       div#settingsPanelTab Settings
