@@ -12,7 +12,7 @@ adminSocket.on('redirect', function(data){
 // 			 perhaps only allow "creator" to clear it, or move the option to an authenticated admin page.
 // 			Currently - the buttons are only rendered in the admin view, but this isn't secure.
 $('#newSessionButton').click(function(){
-	console.log('p='+$('#sessionPresentation option:selected').val());
+	//console.log('p='+$('#sessionPresentation option:selected').val());
 	// todo: auth
 	adminSocket.emit('create', {
 		sessionName: $('#newSessionName').val(),
@@ -32,9 +32,18 @@ $('#endSessionButton').click(function(){
 	adminSocket.emit('end', {sessionName: sessionName})
 });
 $('#stimulusButton').click(function(){
+	sendStimulus();
+});
+$('#stimulusText').keyup(function(){
+	if($('#stimulusLive').prop('checked')){
+		sendStimulus();
+	}
+});
+
+function sendStimulus(){
 	// todo: auth
 	adminSocket.emit('stimulus', {
 		sessionName: sessionName,
 		text: $('#stimulusText').val()
 	})
-});
+}
