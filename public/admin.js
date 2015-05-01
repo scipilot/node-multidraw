@@ -44,6 +44,7 @@ function sendStimulus(){
 	// todo: auth
 	adminSocket.emit('stimulus', {
 		sessionName: sessionName,
+		pageNo: pageNo,
 		text: $('#stimulusText').val()
 	})
 }

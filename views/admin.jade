@@ -15,6 +15,7 @@ html
         h2 Test session: #{sessionName} / screen #{pageNo}
         h2  User screen:&nbsp;
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
+        // TODO: HIDE/SHOW DIFFERENT STIMULUS UI (IMAGE/TEXT) DEPENDING ON INITIAL PRESENTATION CHOICE
         label Stimulus:
           input(id="stimulusText")
           button(id="stimulusButton") Send!
