@@ -127,6 +127,55 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 
+	// Request for any previous test session data (this is similar to 'drawActionHistory')
+	socket.on('getSession', function (data) {
+		console.log('getSession');
+		console.log(data);
+
+		// get the overall session
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			console.log("fetched session:"+data.sessionName);
+			console.log(replies);
+			var presentation = replies[0];
+
+			// get the page
+			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
+				console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
+				console.log(replies);
+				if(replies && replies.length){
+					console.log('sending stimulus to clients... '+presentation);
+					// send the stimulus presentation index / content / filename to all clients
+					io.sockets.emit('stimulus', {
+						"style": presentation,
+						"text": replies[0],
+						"filename": replies[0] //dedupe? switch on presentation type?
+					})
+				}
+			});
+		});
+	});
+
+	// Admin has sent the next test presentation
+	socket.on('stimulus', function (data) {
+		console.log("stimulus set:");
+		console.log(data);
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			console.log("fetched session:"+data.sessionName);
+			console.log(replies);
+
+			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
+			// Save the stimulus into the session, for later review.
+			redisClient.hmset("session:"+data.sessionName+":"+data.pageNo, {"stimulus":data.text});
+
+			// send the stimulus presentation index / content / filename to all clients
+			io.sockets.emit('stimulus', {
+				"style": replies[0],
+				"text": data.text,
+				"filename": data.text
+			})
+		});
+	});
+
 	socket.on('mousemove', function (data) {
 		if (data.id in clients) {
 			var client = clients[data.id];
@@ -205,17 +254,61 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	// Admin: create a new Test Session, and take the user to it
+	// TODO: AUTH!
 	socket.on('create', function (data) {
-		// register a new canvas (for admin listing)
+
+		// todo: wrap session storage in a model
+		// index a new canvas (for admin listing)
 		redisClient.rpush("sessions", data.sessionName);
+		// can you index 'object' instances automatically? (redis noob!)
+		redisClient.hmset("session:"+data.sessionName, {"presentation": data.presentation});
 
 		// start at page 0
 		guidedRedirect(data.sessionName, 0);
 	});
 
+	// Admin: delete a previous Test Session
+	// TODO: AUTH!
+	socket.on('deleteSession', function (data) {
+		// todo: wrap session storage in a model
+
+		// 1. Remove the session from the 'sessions' index
+		redisClient.lrem("sessions", 1, data.sessionName);
+
+		// 2. Delete the "session:"+data.sessionName key
+		redisClient.del("session:"+data.sessionName);
+
+		// 3. Delete all "session:"+sessionName+":"+pageNo keys
+		redisClient.keys("session:"+data.sessionName+":*", function(err, replies){
+			// console.log("fetched page keys:");
+			// console.log(replies);
+			for(var i in replies){
+				//console.log("deleting key : "+replies[i]);
+				redisClient.del(replies[i]);
+			}
+		});
+
+		// 4. Delete the canvas drawing history for "drawactions:"+canvasName (canvasName = sessionName+"."+pageNo)
+		redisClient.keys("drawactions:"+data.sessionName+".*", function(err, replies){
+			for(var i in replies){
+				//console.log("deleting "+replies[i]);
+				redisClient.del(replies[i], function(err, replies){
+					//console.log("deleted "+replies+" drawactions:");
+				});
+			}
+		});
+	});
+
 	// Admin: next canvas page, and take the user to it
 	socket.on('next', function (data) {
-		guidedRedirect(data.sessionName, Number(data.pageNo)+1);
+		var nextPageNo = Number(data.pageNo)+1;
+
+		if(data.stimulus){
+			// If a stimulus is set, pre-save that into the next page now
+			redisClient.hmset("session:"+data.sessionName+":"+nextPageNo, {"stimulus":data.stimulus});
+		}
+
+		guidedRedirect(data.sessionName, nextPageNo);
 	});
 
 	// Admin: finish a Test Session
@@ -285,7 +378,6 @@ function sizeof(object) {
 // Modelling
 
 function getSessionList(cb){
-//	return [{name:'foof'},{name:'oof'}];
 	return redisClient.lrange("sessions", 0 , -1, function(err, replies){
 		console.log(replies);
 		cb(replies);
