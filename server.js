@@ -20,12 +20,13 @@ var netUsage = 0;
 //compress all JS into one file on startup
 new compressor.minify({
 	type: 'uglifyjs',
-	fileIn: ['public/alertify.min.js',
-		'public/jquery.hammer.min.js',
-		'public/lzwCompress.js',
-		'public/draw.js'
+	fileIn: [
+		'src/js/alertify.min.js',
+		'src/js/jquery.hammer.min.js',
+		'src/js/lzwCompress.js',
+		'src/js/draw.js'
 	],
-	fileOut: 'public/draw.min.js',
+	fileOut: 'public/js/draw.min.js',
 	callback: function (err, min) {
 		if (err) {
 			console.log(err);
@@ -36,11 +37,11 @@ new compressor.minify({
 //compress css
 new compressor.minify({
 	type: 'clean-css',
-	fileIn: ['public/alertify.core.css',
-		'public/alertify.default.css',
-		'public/style.css'
+	fileIn: ['src/css/alertify.core.css',
+		'src/css/alertify.default.css',
+		'src/css/style.css'
 	],
-	fileOut: 'public/style.min.css',
+	fileOut: 'public/css/style.min.css',
 	callback: function (err, min) {
 		if (err) {
 			console.log(err);
