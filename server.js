@@ -58,6 +58,8 @@ app.set('view engine', 'jade');
 app.set('view options', {layout: false });
 app.enable('trust proxy');
 
+// ROUTES --------------------------------------------------------------------
+
 /* Main 'lobby' canvas */
 app.get('/', function (req, res) {
 	res.render('main.jade');
@@ -102,6 +104,7 @@ redisClient.on("error", function (err) {
 //set client connection key if not exists
 redisClient.setnx("clientcount", 0);
 
+// CONTROLLER --------------------------------------------------------------------
 io.sockets.on('connection', function (socket) {
 	localConnectedClients += 1;
 	redisClient.incr("clientcount");
@@ -125,55 +128,6 @@ io.sockets.on('connection', function (socket) {
 			socket.emit('drawActionHistory', compressedActions);
 			//increment netusage tracker.
 			netUsage += sizeof(compressedActions);
-		});
-	});
-
-	// Request for any previous test session data (this is similar to 'drawActionHistory')
-	socket.on('getSession', function (data) {
-		console.log('getSession');
-		console.log(data);
-
-		// get the overall session
-		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
-			console.log("fetched session:"+data.sessionName);
-			console.log(replies);
-			var presentation = replies[0];
-
-			// get the page
-			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
-				console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
-				console.log(replies);
-				if(replies && replies.length){
-					console.log('sending stimulus to clients... '+presentation);
-					// send the stimulus presentation index / content / filename to all clients
-					io.sockets.emit('stimulus', {
-						"style": presentation,
-						"text": replies[0],
-						"filename": replies[0] //dedupe? switch on presentation type?
-					})
-				}
-			});
-		});
-	});
-
-	// Admin has sent the next test presentation
-	socket.on('stimulus', function (data) {
-		console.log("stimulus set:");
-		console.log(data);
-		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
-			console.log("fetched session:"+data.sessionName);
-			console.log(replies);
-
-			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
-			// Save the stimulus into the session, for later review.
-			redisClient.hmset("session:"+data.sessionName+":"+data.pageNo, {"stimulus":data.text});
-
-			// send the stimulus presentation index / content / filename to all clients
-			io.sockets.emit('stimulus', {
-				"style": replies[0],
-				"text": data.text,
-				"filename": data.text
-			})
 		});
 	});
 
@@ -254,6 +208,13 @@ io.sockets.on('connection', function (socket) {
 		socket.emit('pong');
 	});
 
+	socket.on('disconnect', function () {
+		localConnectedClients -= 1;
+		redisClient.decr("clientcount");
+	});
+
+	// SCI-WRITER TEST SESSION CONTROLLERS ----------------------------------------------------------
+
 	// Admin: create a new Test Session, and take the user to it
 	// TODO: AUTH!
 	socket.on('create', function (data) {
@@ -266,6 +227,55 @@ io.sockets.on('connection', function (socket) {
 
 		// start at page 0
 		guidedRedirect(data.sessionName, 0);
+	});
+
+	// Request for any previous test session data (this is similar to 'drawActionHistory')
+	socket.on('getSession', function (data) {
+		console.log('getSession');
+		console.log(data);
+
+		// get the overall session
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			console.log("fetched session:"+data.sessionName);
+			console.log(replies);
+			var presentation = replies[0];
+
+			// get the page
+			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
+				console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
+				console.log(replies);
+				if(replies && replies.length){
+					console.log('sending stimulus to clients... '+presentation);
+					// send the stimulus presentation index / content / filename to all clients
+					io.sockets.emit('stimulus', {
+						"style": presentation,
+						"text": replies[0],
+						"filename": replies[0] //dedupe? switch on presentation type?
+					})
+				}
+			});
+		});
+	});
+
+	// Admin has sent the next test presentation
+	socket.on('stimulus', function (data) {
+		console.log("stimulus set:");
+		console.log(data);
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			console.log("fetched session:"+data.sessionName);
+			console.log(replies);
+
+			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
+			// Save the stimulus into the session, for later review.
+			redisClient.hmset("session:"+data.sessionName+":"+data.pageNo, {"stimulus":data.text});
+
+			// send the stimulus presentation index / content / filename to all clients
+			io.sockets.emit('stimulus', {
+				"style": replies[0],
+				"text": data.text,
+				"filename": data.text
+			})
+		});
 	});
 
 	// Admin: delete a previous Test Session
@@ -343,10 +353,6 @@ io.sockets.on('connection', function (socket) {
 		// 			 Quick Workaround: I'm relying on the client to validate the data.canvasName
 	});
 
-	socket.on('disconnect', function () {
-		localConnectedClients -= 1;
-		redisClient.decr("clientcount");
-	});
 });
 
 /**
