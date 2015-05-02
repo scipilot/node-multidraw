@@ -301,7 +301,14 @@ io.sockets.on('connection', function (socket) {
 
 	// Admin: next canvas page, and take the user to it
 	socket.on('next', function (data) {
-		guidedRedirect(data.sessionName, Number(data.pageNo)+1);
+		var nextPageNo = Number(data.pageNo)+1;
+
+		if(data.stimulus){
+			// If a stimulus is set, pre-save that into the next page now
+			redisClient.hmset("session:"+data.sessionName+":"+nextPageNo, {"stimulus":data.stimulus});
+		}
+
+		guidedRedirect(data.sessionName, nextPageNo);
 	});
 
 	// Admin: finish a Test Session

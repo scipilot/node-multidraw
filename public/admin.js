@@ -31,6 +31,11 @@ $('#nextPage').click(function(){
 	// todo: auth
 	adminSocket.emit('next', {sessionName: sessionName, pageNo: pageNo});
 });
+// Combines send-stimulus and next-page actions in one go
+$('#stimulusNextPageButton').click(function(){
+	// todo: auth
+	adminSocket.emit('next', {sessionName: sessionName, pageNo: pageNo, stimulus:$('#stimulusText').val()});
+});
 $('#clearButton').click(function(){
 	// todo: auth
 	adminSocket.emit('clear', {canvasName: canvasName})
