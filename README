@@ -1,15 +1,23 @@
-Multi-user drawing app.
+#SciWriter
+
+Multi-user language testing and training application.
 
 Features:
 
 * Multiplayer drawing.
 * Colour picker
 * Chat
-* Drawing stays in server memory and is transmitted when user joins.
+* Drawings stay in server memory and can be retrieved later for review or additions
+* Administration mode allows teach to perform remote assistance via guided navigation
+* Free-text prompts
+* Background images
+
 
 License: MIT
-Author: Tim Sullivan <tim@timatooth.com>
 
+Author: Pip Jones <code@scipilot.org>
+
+Based on "timatooth/node-multidraw" by Tim Sullivan <tim@timatooth.com>
 Credit: tutorialzine for initial code.
 
 # Installation & Setup
@@ -41,9 +49,11 @@ or
 ## Guided mode (assisted learning extension)
 
 Author: Pip Jones
-Status: WIP / early alpha!
+Status: WIP / alpha!
 
-For the assisted learning model, the following route is the admin screen:
+For the assisted learning model, the canvases are arranged in sequences of "pages".
+
+The following route is the initial admin screen:
 
     `localhost:5000/a/`
 
@@ -55,9 +65,19 @@ Click 'new session' with a user connected, to begin a new test/training session.
 where `SESSION` is the session name the admin made up, and `PAGE` will initially be 0.
 The canvas name stored is `SESSION.PAGE`.
 
-The admin administers the test, then clicks 'Next Page', again everyone is redirected to a new canvas.
+The test is administered, then the admin clicks 'Next Page', again everyone is redirected to a new canvas.
 
 The admin can go back through previous pages to review/print analyse the test subject's performance.
+
+### Stimuli
+
+Some of the language-test mechanics involve presenting a test stimulus to the subject (child),
+and then asking them to write or read what they see, or fill in the blanks etc.
+
+There are two main implementations:
+
+- Free Text: the admin can type anything, or select from a pick-list of prefabricated stimuli
+- Background Images: the admin can upload pre-set lists of images
 
 ---
 
