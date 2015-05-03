@@ -12,19 +12,31 @@ html
       // in-session admin control panel
       div#adminPanel
         h1#bigTitle Remote Test Administration
-        h2 Test session: #{sessionName} / screen #{pageNo}
-        h2  User screen:&nbsp;
+        h2 Session name: #{sessionName} / screen #{pageNo}
+        h2  User screen at:&nbsp;
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
+        hr
         // TODO: HIDE/SHOW DIFFERENT STIMULUS UI (IMAGE/TEXT) DEPENDING ON INITIAL PRESENTATION CHOICE
-        label Stimulus:
-          input(id="stimulusText")
-          button(id="stimulusButton") Send!
-          button(id="stimulusNextPageButton") Send to next screen &gt;
-        label Auto
-          input(type="checkbox" id="stimulusLive" value="1")
-        br
-        br
+        p Presentation controls
+        div(id="presentation-text" class="presentation-controls")
+          table
+            tr
+              td
+                label Stimulus:
+                  br
+                  input(id="stimulusText" placeholder="Enter text to display...")
+              td
+                input(type="checkbox" id="stimulusLive" value="1")
+                label(for="stimulusLive") Type live
+                br
+                button(id="stimulusButton" style="width:100%") Show now
+                br
+                button(id="stimulusNextPageButton"  style="width:100%") Show next &gt;
+        div(id="presentation-images" class="presentation-controls")
+          p Stimulus: (todo:filename)
+        hr
         div.session-controls
+          p Session controls
           button(id="clearButton") Clear!
           button(id="endSessionButton") End!
           button(id="nextPage") Proceed to next screen &gt;
@@ -37,15 +49,17 @@ html
           table
             tr
               td
-                label Session Name:
+                label Session Name
+                  br
                   input(type="text" id="newSessionName" placeholder="")
               td
-                label Presentation:
-                  select(id="sessionPresentation")
+                label Presentation
+                br
+                select(id="sessionPresentation")
                     option(value="0") Blank
                     option(value="1") Free Text
                     option(value="2") Image Backgrounds
-                 button(id="newSessionButton") GO!
+                  button(id="newSessionButton") GO!
         br
         hr
         br
