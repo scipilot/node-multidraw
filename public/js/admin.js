@@ -29,7 +29,7 @@ $(function(){
 		else if (stimulus.style == 3){
 			//console.log("Setting IMAGE stimulus...");
 			// Image
-			$('divpresentation-images')
+			$('div#presentation-images')
 				//.css('background-image: url(\"/uploads/test'+pageNo+'.png')
 				.css("display", "inherit");//show
 		}
@@ -83,6 +83,7 @@ $(function(){
 	});
 	$('.text-prefab-button').click(function(){
 		sendStimulus($(this).text());
+		return false;
 	});
 
 	function sendStimulus(txt){

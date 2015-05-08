@@ -22,23 +22,5 @@ html
       h2 You will see everyone else drawing
       h3 Note: Drawings are saved on the server. Come back any time!
       p#status
-    div#settingsPanel
-      div#settingsPanelTab Settings
-      h2 You're drawing in
-      h3#canvasName #{canvasName}
-      label(for="usernameInput") Chat Name
-      input(type="text" id="usernameInput" placeholder="Username: Guest")
-
-      p
-        a(id="clearButton" href="javascript:void(0)") Clear canvas
-
-      table#serverStats
-      div#bottomAttribution
-        p
-          a(id="statsShow" href="javascript:void(0)") Server Stats
-        p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
-        p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
-    input(type="text" id="chatBox" placeholder="Chat" maxlength="135")
-    script(src="//code.jquery.com/jquery-2.1.1.min.js")
-    script(src="/socket.io/socket.io.js")
-    script(src="/js/draw.min.js")
+  include ./inc/foot.jade
+  script(src="/js/draw.min.js")

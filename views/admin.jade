@@ -17,7 +17,7 @@ html
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
         hr
         // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
-        p Presentation controls
+        p: b Presentation controls
         div(id="presentation-text" class="presentation-controls")
           table
             tr
@@ -36,30 +36,31 @@ html
           table
             tr
               td
-                a(class="text-prefab-button" href="javascript:void(0)") Floatchwail
+                a(class="text-prefab-button" href="#") Floatchwail
                 br
-                a(class="text-prefab-button" href="javascript:void(0)") Meringue
+                a(class="text-prefab-button" href="#") Meringue
                 br
-                a(class="text-prefab-button" href="javascript:void(0)") Orange
-                br
-              td
-                a(class="text-prefab-button" href="javascript:void(0)") Bat
-                br
-                a(class="text-prefab-button" href="javascript:void(0)") Cat
-                br
-                a(class="text-prefab-button" href="javascript:void(0)") The _at _at on the _at
+                a(class="text-prefab-button" href="#") Orange
                 br
               td
-                a(class="text-prefab-button") Boat
-                a(class="text-prefab-button") Yacht
-                a(class="text-prefab-button") Sheaf
-
-
+                a(class="text-prefab-button" href="#") Bat
+                br
+                a(class="text-prefab-button" href="#") Cat
+                br
+                a(class="text-prefab-button" href="#") The _at _at on the _at
+                br
+              td
+                a(class="text-prefab-button" href="#") Boat
+                br
+                a(class="text-prefab-button" href="#") Yacht
+                br
+                a(class="text-prefab-button" href="#") Sheaf
+                br
         div(id="presentation-images" class="presentation-controls")
-          p Stimulus: (todo:filename)
+          p (none yet for images)
         hr
         div.session-controls
-          p Session controls
+          p: b Session controls
           button(id="clearButton") Clear!
           button(id="endSessionButton") End!
           button(id="nextPage") Proceed to next screen &gt;
@@ -100,19 +101,7 @@ html
                 td
                   a(class="deleteSession" data-session-name="#{row}" href="javascript:void(0);") X
 
-    div#settingsPanel
-      div#settingsPanelTab Settings
-
-      h2#canvasName #{canvasName}
-
-      table#serverStats
-      div#bottomAttribution
-        p
-          a(id="statsShow" href="javascript:void(0)") Server Stats
-        p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
-        p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
-    script(src="//code.jquery.com/jquery-2.1.1.min.js")
-    script(src="/socket.io/socket.io.js")
-    if sessionName
+  include ./inc/foot.jade
+  if sessionName
       script(src="/js/draw.min.js")
     script(src="/js/admin.js")
