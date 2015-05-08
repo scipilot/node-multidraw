@@ -64,12 +64,19 @@ app.enable('trust proxy');
 
 /* Main 'lobby' canvas */
 app.get('/', function (req, res) {
-	res.render('main.jade');
+	res.render('main.jade', {
+		sessionName: '',
+		pageNo: 0
+	});
 });
 
 /* User canvas */
 app.get("/c/:canvasname", function (req, res, next) {
-	res.render('main.jade', {canvasName: req.params.canvasname});
+	res.render('main.jade', {
+		canvasName: req.params.canvasname,
+		sessionName: '',
+		pageNo: 0
+	});
 });
 /* User guided session */
 app.get("/s/:sessionName/:pageNo", function (req, res, next) {

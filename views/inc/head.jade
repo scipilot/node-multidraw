@@ -2,11 +2,10 @@ head
   script(type='text/javascript').
     var canvasName = '#{canvasName}';
     var sessionName = '#{sessionName}', pageNo = #{pageNo};
-    //var presentationStyle = #{presentationStyle};
   if sessionName
-    title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
+    title #{sessionName}/#{pageNo} | SciWriter
   else
-    title udraw: Multiplayer Drawing
+    title SciWriter
   meta(name="viewport" content="initial-scale=1")
   meta(name="description" content="Draw with everyone else in realtime on a HTML5 canvas")
   meta(property="og:url" content="https://udraw.me")

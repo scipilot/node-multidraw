@@ -4,6 +4,8 @@ $(function () {
 		return false;
 	}
 
+	$('#status').text('Loading...')
+
 	var doc = $(document),
 		win = $(window),
 		canvas = $('#paper'),
@@ -42,10 +44,11 @@ $(function () {
 		$('#canvasName').text('Main Lobby');
 	}
 
+	$('#status').text('Connecting...')
 	var socket = io.connect();
 
 	socket.on('connect', function () {
-		$('#status').text('Connected to server');
+		$('#status').text('Connected').fadeOut(5000);
 		socket.emit('drawActionHistory', {
 			canvasName: canvasName
 		});
