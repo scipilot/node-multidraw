@@ -1,6 +1,8 @@
 head
   script(type='text/javascript').
-    var canvasName = '#{canvasName}'; var sessionName = '#{sessionName}'; var pageNo = #{pageNo};
+    var canvasName = '#{canvasName}';
+    var sessionName = '#{sessionName}', pageNo = #{pageNo};
+    //var presentationStyle = #{presentationStyle};
   if sessionName
     title #{sessionName}/#{pageNo} | udraw Multiplay Drawing
   else

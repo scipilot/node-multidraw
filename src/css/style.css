@@ -1,4 +1,4 @@
-*{
+body,div{
     margin:0;
     padding:0;
 }
@@ -28,6 +28,9 @@ section, footer, header{
     display: block;
 }
 
+hr{
+    margin: 10px;
+}
 
 div#instructions{
     position: fixed;
@@ -222,10 +225,10 @@ h3{
     top: 0;
     right:0;
     width: 300px;
-    height: 150px;
+    /*height: 150px;*/
     opacity: 1;
     border-radius: 0 0 0 10px;
-    padding-left: 10px;
+    padding: 10px;
     background-color: #FFF;
     color: #000000;
     box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.75);
@@ -234,10 +237,10 @@ h3{
 /* User sessions */
 #sessionPanel {
     margin: 20px auto 0 auto;
-    width: 50%;
+    width: 400px;
     opacity: 1;
     border-radius: 10px;
-    padding-left: 10px;
+    padding: 10px;
     background-color: #FFF;
     color: #000000;
     box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.75);
@@ -251,6 +254,9 @@ div.session-list{
   margin: 0 0 0 8px;
   padding: 2px 3px;
   font-size: 12px;
+}
+div.presentation-controls{
+    display: none;
 }
 div#session-bg-image{
     position: absolute;

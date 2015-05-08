@@ -12,19 +12,55 @@ html
       // in-session admin control panel
       div#adminPanel
         h1#bigTitle Remote Test Administration
-        h2 Test session: #{sessionName} / screen #{pageNo}
-        h2  User screen:&nbsp;
+        h2 Session name: #{sessionName} / screen #{pageNo}
+        h2  User screen at:&nbsp;
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
-        // TODO: HIDE/SHOW DIFFERENT STIMULUS UI (IMAGE/TEXT) DEPENDING ON INITIAL PRESENTATION CHOICE
-        label Stimulus:
-          input(id="stimulusText")
-          button(id="stimulusButton") Send!
-          button(id="stimulusNextPageButton") Send to next screen &gt;
-        label Auto
-          input(type="checkbox" id="stimulusLive" value="1")
-        br
-        br
+        hr
+        // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
+        p: b Presentation controls
+        div(id="presentation-text" class="presentation-controls")
+          table
+            tr
+              td
+                label Stimulus:
+                  br
+                  input(id="stimulusText" placeholder="Enter text to display...")
+              td
+                input(type="checkbox" id="stimulusLive" value="1")
+                label(for="stimulusLive") Type live
+                br
+                button(id="stimulusButton" style="width:100%") Show now
+                br
+                button(id="stimulusNextPageButton"  style="width:100%") Show next &gt;
+        div(id="presentation-text-prefab" class="presentation-controls")
+          table
+            tr
+              td
+                a(class="text-prefab-button" href="#") Floatchwail
+                br
+                a(class="text-prefab-button" href="#") Meringue
+                br
+                a(class="text-prefab-button" href="#") Orange
+                br
+              td
+                a(class="text-prefab-button" href="#") Bat
+                br
+                a(class="text-prefab-button" href="#") Cat
+                br
+                a(class="text-prefab-button" href="#") The _at _at on the _at
+                br
+              td
+                a(class="text-prefab-button" href="#") Boat
+                br
+                a(class="text-prefab-button" href="#") Yacht
+                br
+                a(class="text-prefab-button" href="#") Sheaf
+                br
+        div(id="presentation-images" class="presentation-controls")
+          p (none yet for images)
+        hr
         div.session-controls
+          p: b Session controls
           button(id="clearButton") Clear!
           button(id="endSessionButton") End!
           button(id="nextPage") Proceed to next screen &gt;
@@ -37,15 +73,18 @@ html
           table
             tr
               td
-                label Session Name:
+                label Session Name
+                  br
                   input(type="text" id="newSessionName" placeholder="")
               td
-                label Presentation:
-                  select(id="sessionPresentation")
+                label Presentation
+                br
+                select(id="sessionPresentation")
                     option(value="0") Blank
                     option(value="1") Free Text
-                    option(value="2") Image Backgrounds
-                 button(id="newSessionButton") GO!
+                    option(value="2") Preset Text
+                    option(value="3") Preset Image Backgrounds
+                  button(id="newSessionButton") GO!
         br
         hr
         br
@@ -62,19 +101,7 @@ html
                 td
                   a(class="deleteSession" data-session-name="#{row}" href="javascript:void(0);") X
 
-    div#settingsPanel
-      div#settingsPanelTab Settings
-
-      h2#canvasName #{canvasName}
-
-      table#serverStats
-      div#bottomAttribution
-        p
-          a(id="statsShow" href="javascript:void(0)") Server Stats
-        p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
-        p Source code on <a href="https://github.com/timatooth/node-multidraw">GitHub</a>
-    script(src="//code.jquery.com/jquery-2.1.1.min.js")
-    script(src="/socket.io/socket.io.js")
-    if sessionName
+  include ./inc/foot.jade
+  if sessionName
       script(src="/js/draw.min.js")
     script(src="/js/admin.js")

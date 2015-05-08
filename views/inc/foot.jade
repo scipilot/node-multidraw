@@ -1,0 +1,17 @@
+div#settingsPanel
+  div#settingsPanelTab Settings
+  h2 You're in
+  h3#canvasName #{canvasName}
+  h3#sessionName #{sessionName}
+  h3#pageNo #{pageNo}
+  label(for="usernameInput") Chat Name
+  input(type="text" id="usernameInput" placeholder="Username: Guest")
+  table#serverStats
+  div#bottomAttribution
+    p
+      a(id="statsShow" href="javascript:void(0)") Server Stats
+    p v0.6 by <a href="https://scipilot.org">Pip Jones</a>
+    p v0.5 by <a href="https://timatooth.com">Tim Sullivan</a>
+    p Source code on <a href="https://github.com/scipilot/node-multidraw">GitHub</a>
+  script(src="//code.jquery.com/jquery-2.1.1.min.js")
+  script(src="/socket.io/socket.io.js")

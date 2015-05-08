@@ -20,6 +20,7 @@ var netUsage = 0;
 //compress all JS into one file on startup
 new compressor.minify({
 	type: 'uglifyjs',
+	//type: 'no-compress', // for dev
 	fileIn: [
 		'src/js/alertify.min.js',
 		'src/js/jquery.hammer.min.js',
@@ -31,7 +32,8 @@ new compressor.minify({
 		if (err) {
 			console.log(err);
 		}
-	}
+	},
+	outSourceMap:true// couldn't get it to work via node-minify... doesn't it pass all the uglify options through?
 });
 
 //compress css
@@ -91,9 +93,10 @@ app.get("/a/", function (req, res, next) {
 /* Admin view-canvas */
 app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 	res.render('admin.jade', {
+		canvasName: req.params.sessionName+'.'+req.params.pageNo,
 		sessionName: req.params.sessionName,
-		pageNo: req.params.pageNo,
-		canvasName: req.params.sessionName+'.'+req.params.pageNo
+		pageNo: req.params.pageNo
+		//presentationStyle:
 	});
 });
 
@@ -231,21 +234,21 @@ io.sockets.on('connection', function (socket) {
 
 	// Request for any previous test session data (this is similar to 'drawActionHistory')
 	socket.on('getSession', function (data) {
-		console.log('getSession');
-		console.log(data);
+		//console.log('getSession');
+		//console.log(data);
 
 		// get the overall session
 		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
-			console.log("fetched session:"+data.sessionName);
-			console.log(replies);
+			//console.log("fetched session:"+data.sessionName);
+			//console.log(replies);
 			var presentation = replies[0];
 
 			// get the page
 			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
-				console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
-				console.log(replies);
+				//console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
+				//console.log(replies);
 				if(replies && replies.length){
-					console.log('sending stimulus to clients... '+presentation);
+					//console.log('sending stimulus to clients... '+presentation);
 					// send the stimulus presentation index / content / filename to all clients
 					io.sockets.emit('stimulus', {
 						"style": presentation,
