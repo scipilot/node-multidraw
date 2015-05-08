@@ -136,14 +136,14 @@ $(function () {
 	socket.on('stimulus', function (stimulus) {
 		//console.log('received stimulus: ');
 		//console.log(stimulus);
-		if(stimulus.style == 1){
+		if(stimulus.style == 1 || stimulus.style == 2){
 			//console.log("Setting text stimulus...");
 			// Text
 			$('div#session-bg-text')
 				.text(stimulus.text)
 				.css("display", "inherit");
 		}
-		else if (stimulus.style == 2){
+		else if (stimulus.style == 3){
 			//console.log("Setting IMAGE stimulus...");
 			// Image
 			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');

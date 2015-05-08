@@ -16,7 +16,7 @@ html
         h2  User screen at:&nbsp;
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
         hr
-        // TODO: HIDE/SHOW DIFFERENT STIMULUS UI (IMAGE/TEXT) DEPENDING ON INITIAL PRESENTATION CHOICE
+        // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
         p Presentation controls
         div(id="presentation-text" class="presentation-controls")
           table
@@ -32,6 +32,29 @@ html
                 button(id="stimulusButton" style="width:100%") Show now
                 br
                 button(id="stimulusNextPageButton"  style="width:100%") Show next &gt;
+        div(id="presentation-text-prefab" class="presentation-controls")
+          table
+            tr
+              td
+                a(class="text-prefab-button" href="javascript:void(0)") Floatchwail
+                br
+                a(class="text-prefab-button" href="javascript:void(0)") Meringue
+                br
+                a(class="text-prefab-button" href="javascript:void(0)") Orange
+                br
+              td
+                a(class="text-prefab-button" href="javascript:void(0)") Bat
+                br
+                a(class="text-prefab-button" href="javascript:void(0)") Cat
+                br
+                a(class="text-prefab-button" href="javascript:void(0)") The _at _at on the _at
+                br
+              td
+                a(class="text-prefab-button") Boat
+                a(class="text-prefab-button") Yacht
+                a(class="text-prefab-button") Sheaf
+
+
         div(id="presentation-images" class="presentation-controls")
           p Stimulus: (todo:filename)
         hr
@@ -58,7 +81,8 @@ html
                 select(id="sessionPresentation")
                     option(value="0") Blank
                     option(value="1") Free Text
-                    option(value="2") Image Backgrounds
+                    option(value="2") Preset Text
+                    option(value="3") Preset Image Backgrounds
                   button(id="newSessionButton") GO!
         br
         hr

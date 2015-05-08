@@ -20,6 +20,13 @@ $(function(){
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 2){
+			//console.log("Setting PRESET TEXT stimulus...");
+			// Text
+			$('div#presentation-text-prefab')
+				//.text(stimulus.text)
+				.css("display", "inherit");//show
+		}
+		else if (stimulus.style == 3){
 			//console.log("Setting IMAGE stimulus...");
 			// Image
 			$('divpresentation-images')
@@ -67,20 +74,24 @@ $(function(){
 		adminSocket.emit('end', {sessionName: sessionName})
 	});
 	$('#stimulusButton').click(function(){
-		sendStimulus();
+		sendStimulus($('#stimulusText').val());
 	});
 	$('#stimulusText').keyup(function(){
 		if($('#stimulusLive').prop('checked')){
-			sendStimulus();
+			sendStimulus($('#stimulusText').val());
 		}
 	});
+	$('.text-prefab-button').click(function(){
+		sendStimulus($(this).text());
+	});
 
-	function sendStimulus(){
+	function sendStimulus(txt){
+		//console.log('sendStimulus('+txt);
 		// todo: auth
 		adminSocket.emit('stimulus', {
 			sessionName: sessionName,
 			pageNo: pageNo,
-			text: $('#stimulusText').val()
+			text: txt
 		})
 	}
 
