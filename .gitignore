@@ -1,5 +1,5 @@
 *~
 node_modules/
-public/draw.min.js
-public/style.min.css
+public/js/draw.min.js
+public/css/style.min.css
 .idea
