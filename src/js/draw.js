@@ -13,7 +13,7 @@ $(function () {
 		instructions = $('#instructions'),
 		colourTabOpen = true;
 	settingsTabOpen = false;
-	setColor = '#000';
+	setColor = '#'+options.subjectPenColour;
 	defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
