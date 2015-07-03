@@ -87,6 +87,20 @@ html
                   button(id="newSessionButton") GO!
         br
         hr
+        div.app-options
+          h2 Options
+          table
+            tr
+              td Subject Pen Colour
+              td
+                select(id="subjectPenColour" style="background-color:##{options.subjectPenColour}" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor")
+                  option(value="000" style="background-color:#000" selected=(options.subjectPenColour=="000" ? "selected" : null) ) Black
+                  option(value="B00" style="background-color:#B00" selected=(options.subjectPenColour=="B00" ? "selected" : null) ) Red
+                  option(value="0B0" style="background-color:#0B0" selected=(options.subjectPenColour=="0B0" ? "selected" : null) ) Green
+                  option(value="00B" style="background-color:#00B" selected=(options.subjectPenColour=="00B" ? "selected" : null) ) Blue
+                  option(value="B09" style="background-color:#B09" selected=(options.subjectPenColour=="B09" ? "selected" : null) ) Purple
+                  option(value="F96" style="background-color:#F96" selected=(options.subjectPenColour=="F96" ? "selected" : null) ) Orange
+        hr
         br
         div.session-list
           h2 Review a previous session:

@@ -90,7 +90,7 @@ app.get("/s/:sessionName/:pageNo", function (req, res, next) {
 /* Admin */
 app.get("/a/", function (req, res, next) {
 	getSessionList(function(sessions){
-		res.render('admin.jade', {
+		renderWithOptions(res, 'admin.jade', {
 			sessionName: '',
 			pageNo: 0,
 			sessionList:sessions
@@ -106,6 +106,15 @@ app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 		//presentationStyle:
 	});
 });
+
+/** Renders a view with any previously persisted app options injected into the viewModel */
+function renderWithOptions(res, viewName, viewModel){
+	getOptionsList(function(options){
+		viewModel.options = options;
+		console.log('renderWithOptions', viewName, viewModel);
+		res.render(viewName, viewModel);
+	});
+}
 
 redisClient.on("error", function (err) {
 	console.log("Redis Error: " + err);
@@ -363,6 +372,11 @@ io.sockets.on('connection', function (socket) {
 		// 			 Quick Workaround: I'm relying on the client to validate the data.canvasName
 	});
 
+	// save an app option (admin only)
+	socket.on('setOption', function(data){
+		setAppOption(data.key, data.val);
+	});
+
 });
 
 /**
@@ -396,6 +410,28 @@ function sizeof(object) {
 
 function getSessionList(cb){
 	return redisClient.lrange("sessions", 0 , -1, function(err, replies){
+		//console.log(replies);
+		cb(replies);
+	});
+}
+
+function getOptionsList(cb){
+	return redisClient.hgetall("options", function(err, replies){
+		console.log("getOptionsList:");
+		console.log(replies);
+		cb(replies);
+	});
+}
+
+// Application option persistence
+function setAppOption(key, val){
+		console.log("setAppOption:", key, val);
+	redisClient.hset("options", key, val);
+}
+function getAppOption(key, cb){
+	return redisClient.hget("options", key, function(err, replies){
+		console.log("getAppOption:"+key);
+		console.log(err);
 		console.log(replies);
 		cb(replies);
 	});

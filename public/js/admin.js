@@ -56,6 +56,13 @@ $(function(){
 			presentation: $('#sessionPresentation option:selected').val()
 		});
 	});
+
+	// Options
+	$('#subjectPenColour').change(function(){
+		adminSocket.emit('setOption', {key:'subjectPenColour', val:$('#subjectPenColour option:selected').val()})
+	});
+
+	// In-Test admin panel
 	$('#nextPage').click(function(){
 		// todo: auth
 		adminSocket.emit('next', {sessionName: sessionName, pageNo: pageNo});
