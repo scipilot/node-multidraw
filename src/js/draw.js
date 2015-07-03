@@ -23,7 +23,7 @@ $(function () {
 	alertify.set({ delay: 1000 * 30 });
 
 	var settings = {
-		lineWidth:4
+		lineWidth: options.subjectPenSize
 	};
 
 	var pastDragX = 0, pastDragY = 0;
@@ -123,6 +123,7 @@ $(function () {
 			osctx.beginPath();
 			osctx.strokeStyle = history[i].color;
 			osctx.lineWidth = settings.lineWidth;
+			osctx.lineCap = "round";
 			osctx.moveTo(history[i].fromX, history[i].fromY);
 			osctx.lineTo(history[i].toX, history[i].toY);
 			osctx.stroke();
@@ -289,6 +290,7 @@ $(function () {
 		ctx.beginPath(); //need to enclose in begin/close for colour settings to work
 		ctx.strokeStyle = color;
 		ctx.lineWidth = settings.lineWidth;
+		ctx.lineCap = "round";
 		ctx.moveTo(fromx, fromy);
 		ctx.lineTo(tox, toy);
 		ctx.stroke();

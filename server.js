@@ -72,7 +72,7 @@ app.get('/', function (req, res) {
 
 /* User canvas */
 app.get("/c/:canvasname", function (req, res, next) {
-	res.render('main.jade', {
+	renderWithOptions(res, 'main.jade', {
 		canvasName: req.params.canvasname,
 		sessionName: '',
 		pageNo: 0
@@ -80,7 +80,7 @@ app.get("/c/:canvasname", function (req, res, next) {
 });
 /* User guided session */
 app.get("/s/:sessionName/:pageNo", function (req, res, next) {
-	res.render('session.jade', {
+	renderWithOptions(res, 'session.jade', {
 		sessionName: req.params.sessionName,
 		pageNo: req.params.pageNo,
 		canvasName: req.params.sessionName+'.'+req.params.pageNo
@@ -99,7 +99,7 @@ app.get("/a/", function (req, res, next) {
 });
 /* Admin view-canvas */
 app.get("/a/:sessionName/:pageNo", function (req, res, next) {
-	res.render('admin.jade', {
+	renderWithOptions(res,'admin.jade', {
 		canvasName: req.params.sessionName+'.'+req.params.pageNo,
 		sessionName: req.params.sessionName,
 		pageNo: req.params.pageNo

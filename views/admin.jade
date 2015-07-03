@@ -100,6 +100,15 @@ html
                   option(value="00B" style="background-color:#00B" selected=(options.subjectPenColour=="00B" ? "selected" : null) ) Blue
                   option(value="B09" style="background-color:#B09" selected=(options.subjectPenColour=="B09" ? "selected" : null) ) Purple
                   option(value="F96" style="background-color:#F96" selected=(options.subjectPenColour=="F96" ? "selected" : null) ) Orange
+            tr
+              td Subject Pen Size
+              td
+                select(id="subjectPenSize")
+                  option(value="1" selected=(options.subjectPenSize=="1" ? "selected" : null) ) Hairline
+                  option(value="3" selected=(options.subjectPenSize=="3" ? "selected" : null) ) S
+                  option(value="5" selected=(options.subjectPenSize=="4" ? "selected" : null) ) M
+                  option(value="10" selected=(options.subjectPenSize=="10" ? "selected" : null) ) L
+                  option(value="20" selected=(options.subjectPenSize=="20" ? "selected" : null) ) XL
         hr
         br
         div.session-list
