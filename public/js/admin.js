@@ -64,6 +64,9 @@ $(function(){
 	$('#subjectPenSize').change(function(){
 		adminSocket.emit('setOption', {key:'subjectPenSize', val:$('#subjectPenSize option:selected').val()})
 	});
+	$('#adminPenColour').change(function(){
+		adminSocket.emit('setOption', {key:'adminPenColour', val:$('#adminPenColour option:selected').val()})
+	});
 
 	// In-Test admin panel
 	$('#nextPage').click(function(){

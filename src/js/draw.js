@@ -13,7 +13,7 @@ $(function () {
 		instructions = $('#instructions'),
 		colourTabOpen = true;
 	settingsTabOpen = false;
-	setColor = '#'+options.subjectPenColour;
+	setColor = '#'+options.penColour;
 	defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
@@ -23,7 +23,7 @@ $(function () {
 	alertify.set({ delay: 1000 * 30 });
 
 	var settings = {
-		lineWidth: options.subjectPenSize
+		lineWidth: options.penSize
 	};
 
 	var pastDragX = 0, pastDragY = 0;

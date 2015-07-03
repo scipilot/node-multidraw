@@ -1,0 +1,6 @@
+mixin colourPicker(id, currentColour)
+  - var colours = {"Black":"000", "Red":"B00", "Green":"0F0", "Blue":"00B", "Purple":"90F", "Orange":"F96"};
+
+  select(id=id style="background-color:##{currentColour}" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor")
+    each val, index in colours
+      option(value=val style="background-color:#"+val selected=(currentColour==val ? "selected" : null) )= index

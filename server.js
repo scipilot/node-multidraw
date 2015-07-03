@@ -66,7 +66,8 @@ app.enable('trust proxy');
 app.get('/', function (req, res) {
 	res.render('main.jade', {
 		sessionName: '',
-		pageNo: 0
+		pageNo: 0,
+		role:'user'
 	});
 });
 
@@ -75,7 +76,8 @@ app.get("/c/:canvasname", function (req, res, next) {
 	renderWithOptions(res, 'main.jade', {
 		canvasName: req.params.canvasname,
 		sessionName: '',
-		pageNo: 0
+		pageNo: 0,
+		role: 'user'
 	});
 });
 /* User guided session */
@@ -83,7 +85,8 @@ app.get("/s/:sessionName/:pageNo", function (req, res, next) {
 	renderWithOptions(res, 'session.jade', {
 		sessionName: req.params.sessionName,
 		pageNo: req.params.pageNo,
-		canvasName: req.params.sessionName+'.'+req.params.pageNo
+		canvasName: req.params.sessionName+'.'+req.params.pageNo,
+		role: 'user'
 	});
 });
 
@@ -93,7 +96,8 @@ app.get("/a/", function (req, res, next) {
 		renderWithOptions(res, 'admin.jade', {
 			sessionName: '',
 			pageNo: 0,
-			sessionList:sessions
+			sessionList:sessions,
+			role: 'admin'
 		});
 	});
 });
@@ -102,7 +106,8 @@ app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 	renderWithOptions(res,'admin.jade', {
 		canvasName: req.params.sessionName+'.'+req.params.pageNo,
 		sessionName: req.params.sessionName,
-		pageNo: req.params.pageNo
+		pageNo: req.params.pageNo,
+		role: 'admin'
 		//presentationStyle:
 	});
 });
@@ -110,8 +115,13 @@ app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 /** Renders a view with any previously persisted app options injected into the viewModel */
 function renderWithOptions(res, viewName, viewModel){
 	getOptionsList(function(options){
+
+		// todo: move role-specific stuff to a handler?
+		options.penColour = (viewModel.role == 'admin') ? options.adminPenColour : options.subjectPenColour;
+		options.penSize = options.subjectPenSize; // make admin size too?
+
 		viewModel.options = options;
-		console.log('renderWithOptions', viewName, viewModel);
+		//console.log('renderWithOptions', viewName, viewModel);
 		res.render(viewName, viewModel);
 	});
 }
@@ -278,11 +288,11 @@ io.sockets.on('connection', function (socket) {
 
 	// Admin has sent the next test presentation
 	socket.on('stimulus', function (data) {
-		console.log("stimulus set:");
-		console.log(data);
+		//console.log("stimulus set:");
+		//console.log(data);
 		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
-			console.log("fetched session:"+data.sessionName);
-			console.log(replies);
+			//console.log("fetched session:"+data.sessionName);
+			//console.log(replies);
 
 			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
 			// Save the stimulus into the session, for later review.
@@ -417,22 +427,19 @@ function getSessionList(cb){
 
 function getOptionsList(cb){
 	return redisClient.hgetall("options", function(err, replies){
-		console.log("getOptionsList:");
-		console.log(replies);
+		//console.log("getOptionsList:", replies);
 		cb(replies);
 	});
 }
 
 // Application option persistence
 function setAppOption(key, val){
-		console.log("setAppOption:", key, val);
+		//console.log("setAppOption:", key, val);
 	redisClient.hset("options", key, val);
 }
 function getAppOption(key, cb){
 	return redisClient.hget("options", key, function(err, replies){
-		console.log("getAppOption:"+key);
-		console.log(err);
-		console.log(replies);
+		//console.log("getAppOption:"+key, err, replies);
 		cb(replies);
 	});
 }
