@@ -67,7 +67,8 @@ app.get('/', function (req, res) {
 	res.render('main.jade', {
 		sessionName: '',
 		pageNo: 0,
-		role:'user'
+		role:'user',
+		options: {}
 	});
 });
 
@@ -115,6 +116,7 @@ app.get("/a/:sessionName/:pageNo", function (req, res, next) {
 /** Renders a view with any previously persisted app options injected into the viewModel */
 function renderWithOptions(res, viewName, viewModel){
 	getOptionsList(function(options){
+		if(options === null) options = {adminPenColour: '000', subjectPenColour:'000', subjectPenSize:3};
 
 		// todo: move role-specific stuff to a handler?
 		options.penColour = (viewModel.role == 'admin') ? options.adminPenColour : options.subjectPenColour;
