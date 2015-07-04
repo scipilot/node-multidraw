@@ -1,7 +1,7 @@
 head
   script(type='text/javascript').
     var canvasName = '#{canvasName}';
-    var sessionName = '#{sessionName}', pageNo = #{pageNo};
+    var SciWriter = { sessionName: '#{sessionName}', pageNo: #{pageNo}, role: '#{role}' };
     var options = !{JSON.stringify(options)};
   if sessionName
     title #{sessionName}/#{pageNo} | SciWriter

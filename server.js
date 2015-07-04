@@ -138,6 +138,13 @@ io.sockets.on('connection', function (socket) {
 	localConnectedClients += 1;
 	redisClient.incr("clientcount");
 
+	// the options are baked into the template (via renderWithOptions). We could send them like this, but then we'd need to build the UI dynamically, not in jade...
+	// and the jade knows who is user/admin
+	//	// send initial app options to client
+	//	getOptionsList(function(options){
+	//		socket.emit('options',options);
+	//	});
+
 	socket.on('drawActionHistory', function (data) {
 		//client has asked for all the draw action history.
 		var drawActions = [];
@@ -284,6 +291,26 @@ io.sockets.on('connection', function (socket) {
 				}
 			});
 		});
+	});
+
+	socket.on('options', function(data){
+			getOptionsList(function(options){
+
+				//
+				options.roles = {
+					admin: {
+						penColour: options.adminPenColour,
+						penSize: options.subjectPenSize
+					},
+					user: {
+						penColour: options.subjectPenColour,
+						penSize: options.subjectPenSize
+					}
+				};
+
+				socket.emit('options',options);
+			});
+
 	});
 
 	// Admin has sent the next test presentation

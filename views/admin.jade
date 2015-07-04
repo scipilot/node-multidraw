@@ -94,6 +94,11 @@ html
           h2 Options
           table
             tr
+            tr
+              td Admin pen colour
+              td
+                +colourPicker("adminPenColour", options.adminPenColour)
+            tr
               td Subject Pen Colour
               td
                 +colourPicker("subjectPenColour", options.subjectPenColour)

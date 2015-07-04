@@ -66,17 +66,18 @@ $(function(){
 	});
 	$('#adminPenColour').change(function(){
 		adminSocket.emit('setOption', {key:'adminPenColour', val:$('#adminPenColour option:selected').val()})
+		adminSocket.emit('options');// refresh from options.
 	});
 
 	// In-Test admin panel
 	$('#nextPage').click(function(){
 		// todo: auth
-		adminSocket.emit('next', {sessionName: sessionName, pageNo: pageNo});
+		adminSocket.emit('next', {sessionName: SciWriter.sessionName, pageNo: SciWriter.pageNo});
 	});
 	// Combines send-stimulus and next-page actions in one go
 	$('#stimulusNextPageButton').click(function(){
 		// todo: auth
-		adminSocket.emit('next', {sessionName: sessionName, pageNo: pageNo, stimulus:$('#stimulusText').val()});
+		adminSocket.emit('next', {sessionName: SciWriter.sessionName, pageNo: SciWriter.pageNo, stimulus:$('#stimulusText').val()});
 	});
 	$('#clearButton').click(function(){
 		// todo: auth
@@ -84,7 +85,7 @@ $(function(){
 	});
 	$('#endSessionButton').click(function(){
 		// todo: auth
-		adminSocket.emit('end', {sessionName: sessionName})
+		adminSocket.emit('end', {sessionName: SciWriter.sessionName})
 	});
 	$('#stimulusButton').click(function(){
 		sendStimulus($('#stimulusText').val());
@@ -103,8 +104,8 @@ $(function(){
 		//console.log('sendStimulus('+txt);
 		// todo: auth
 		adminSocket.emit('stimulus', {
-			sessionName: sessionName,
-			pageNo: pageNo,
+			sessionName: SciWriter.sessionName,
+			pageNo: SciWriter.pageNo,
 			text: txt
 		})
 	}

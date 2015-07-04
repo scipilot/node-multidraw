@@ -11,14 +11,12 @@ $(function () {
 		canvas = $('#paper'),
 		context = canvas[0].getContext('2d'),
 		instructions = $('#instructions'),
-		colourTabOpen = true;
-	settingsTabOpen = false;
-	setColor = '#'+options.penColour;
-	defaultName = "Guest",
+		colourTabOpen = true,
+		settingsTabOpen = false,
+		setColor = '#'+options.penColour,
+		defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
-		//sessionName = $('#sessionName').text(),	// moved to template. is that better or worse?! (they'll need to be in every template...)
-		//pageNo = $('#pageNo').text(),						// I want a view-model
 		dragging = false;
 	alertify.set({ delay: 1000 * 30 });
 
@@ -54,12 +52,12 @@ $(function () {
 		});
 
 		// todo: make the test session handling a plugin module - not in the main draw.js
-		if(typeof(sessionName) != "undefined"){
+		if(typeof(SciWriter.sessionName) != "undefined"){
 			// Note this will result in a 'stimulus' response, which is also sent from admin-UI on demand during sessions.
 			// Receiving it on-connect would be from a) DB/CMS/preset-list in the sequence or b) when re-viewing previous session, and wanting to see the drawing in context with the chosen stimulus
 			socket.emit('getSession', {
-				sessionName: sessionName,
-				pageNo: pageNo
+				sessionName: SciWriter.sessionName,
+				pageNo: SciWriter.pageNo
 			});
 		}
 	});
@@ -152,9 +150,14 @@ $(function () {
 			// Image
 			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');
 			$('div#session-bg-image')
-				.css('background-image', 'url("/uploads/test'+pageNo+'.png")')
+				.css('background-image', 'url("/uploads/test'+SciWriter.pageNo+'.png")')
 				.css("display", "inherit");
 		}
+	});
+
+	socket.on('options', function(options){
+		setColor = '#'+options.roles[SciWriter.role].penColour;
+		settings.lineWidth = options.roles[SciWriter.role].penSize;
 	});
 
 	/*Respond to server 'pings' */
@@ -339,7 +342,7 @@ $(function () {
 
 	function preventBehavior(e) {
 		e.preventDefault();
-	};
+	}
 
 	document.addEventListener("touchmove", preventBehavior, false);
 
