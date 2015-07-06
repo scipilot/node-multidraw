@@ -7,7 +7,15 @@ html
       div#session-bg-image
       div#session-bg-text
         span
-    canvas#paper(width="1900" height="1000") Sorry, Your browser doesn't support canvas!
+    canvas#paper(width="1900" height="1000") Sorry, please use a more modern browser!
+    div#tiles-overlay
 
   include ./inc/foot.jade
-  script(src="/js/draw.min.js")
+
+  script(src="/js/main.min.js")
+
+  // TODO LOAD ON STIMULUS PRESENTATION STRATEGY
+  //if(stimulus.style == 4){
+  script(type='text/javascript').
+    $(TilesPlugin($));
+    //$(DrawPlugin(JQuery));

@@ -1,4 +1,4 @@
-$(function () {
+DrawPlugin = function () {
 	if (!('getContext' in document.createElement('canvas'))) {
 		alert('Sorry, it looks like your browser does not support canvas!');
 		return false;
@@ -389,4 +389,4 @@ $(function () {
 		}
 	});
 
-});
+}

@@ -19,15 +19,16 @@ var netUsage = 0;
 
 //compress all JS into one file on startup
 new compressor.minify({
-	type: 'uglifyjs',
-	//type: 'no-compress', // for dev
+ 	//type: 'uglifyjs', // production
+	type: 'no-compress', // for dev
 	fileIn: [
 		'src/js/alertify.min.js',
 		'src/js/jquery.hammer.min.js',
 		'src/js/lzwCompress.js',
-		'src/js/draw.js'
+		'src/js/draw.js',
+		'src/js/tiles.js'
 	],
-	fileOut: 'public/js/draw.min.js',
+	fileOut: 'public/js/main.min.js',
 	callback: function (err, min) {
 		if (err) {
 			console.log(err);
