@@ -1,3 +1,8 @@
+/**
+ * Uses the http://touchpunch.furf.com enhancement for JQ UI draggable.
+ *
+ */
+
 TilesPlugin = function ($) {
 
 	if (!('getContext' in document.createElement('canvas'))) {
@@ -120,5 +125,6 @@ TilesPlugin = function ($) {
 		var jTile = $('<div class="tile draggable">'+grapheme+'</div>');
 		tiles.push(jTile);
 		$('div#tiles-overlay').append(jTile);
+		jTile.draggable();
 	}
 };
