@@ -47,8 +47,14 @@ TilesPlugin = function ($) {
 
 	});
 
-//	socket.on('moving', function (data) {
-//	});
+	// server is telling us someone is dragging
+	socket.on('drag', function (data) {
+		console.log('drag', data);
+		$('#tile-'+data.grapheme)
+			.css('top', data.y)
+			.css('left', data.x)
+		;
+	});
 
 	canvas.on('mousedown', function (e) {
 		touchMouseDown(e, e.pageX, e.pageY);
@@ -122,9 +128,19 @@ TilesPlugin = function ($) {
 	}
 
 	function makeTile(grapheme){
-		var jTile = $('<div class="tile draggable">'+grapheme+'</div>');
+		var jTile = $('<div id="tile-'+grapheme+'" class="tile draggable">'+grapheme+'</div>');
 		tiles.push(jTile);
 		$('div#tiles-overlay').append(jTile);
-		jTile.draggable();
+
+		jTile.draggable({
+			drag: function( event, ui ) {
+				socket.emit('drag', {
+					'x': ui.position.left,
+					'y': ui.position.top,
+					'canvasName': canvasName,
+					'grapheme': grapheme
+				});
+			}
+		});
 	}
 };

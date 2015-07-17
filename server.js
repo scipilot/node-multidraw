@@ -252,6 +252,14 @@ io.sockets.on('connection', function (socket) {
 		redisClient.decr("clientcount");
 	});
 
+	// SCI-WRITER TILE CONTROLLERS ----------------------------------------------------------
+
+	socket.on('drag', function(data){
+		console.log('drag', data);
+		socket.broadcast.emit('drag', data);
+
+	});
+
 	// SCI-WRITER TEST SESSION CONTROLLERS ----------------------------------------------------------
 
 	// Admin: create a new Test Session, and take the user to it

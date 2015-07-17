@@ -283,4 +283,6 @@ div.tile{
     width: 100px;
     height: 100px;
     box-shadow: 0 0 10px 0 rgba(50, 50, 50, 0.75);
+    font-size: 54px;
+    text-align: center;
 }
