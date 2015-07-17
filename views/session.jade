@@ -14,8 +14,10 @@ html
 
   script(src="/js/main.min.js")
 
-  // TODO LOAD ON STIMULUS PRESENTATION STRATEGY
-  //if(stimulus.style == 4){
-  script(type='text/javascript').
+  // LOAD ON STIMULUS PRESENTATION STRATEGY
+  //if(stimulus.style == 4)
+  script(type='text/javascript')
     $(TilesPlugin($));
-    //$(DrawPlugin(JQuery));
+  //else
+  //  script(type='text/javascript')
+      $(DrawPlugin(JQuery));

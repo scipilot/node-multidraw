@@ -10,6 +10,8 @@ html
         span
     if sessionName
       canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
+      div#tiles-overlay
+
       // in-session admin control panel
       div#adminPanel
         h1#bigTitle Remote Test Administration
@@ -130,5 +132,10 @@ html
 
   include ./inc/foot.jade
   if sessionName
-      script(src="/js/main.min.js")
+    script(src="/js/main.min.js")
     script(src="/js/admin.js")
+
+
+    script(type='text/javascript')
+      $(TilesPlugin($));
+
