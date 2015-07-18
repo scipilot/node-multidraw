@@ -27,7 +27,7 @@ TilesPlugin = function ($) {
 	socket.on('stimulus', function(data){
 		console.log('stimulus', data);
 
-		$('.grapheme-tile').remove();
+		clearTiles();
 
 		var gs = data.text.split(' ');
 		var i;
@@ -43,6 +43,14 @@ TilesPlugin = function ($) {
 			.css('left', data.x)
 		;
 	});
+
+	socket.on('cleared', function(data){
+		clearTiles();
+	});
+
+	function clearTiles(){
+		$('.grapheme-tile').remove();
+	}
 
 	function makeTile(grapheme){
 		var jTile = $('<div id="tile-'+grapheme+'" class="grapheme-tile draggable">'+grapheme+'</div>');

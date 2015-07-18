@@ -403,8 +403,10 @@ io.sockets.on('connection', function (socket) {
 	}
 
 	// delete the canvas history
+	// @todo enable this to be used for other presentation types? (e.g. tiles)
 	socket.on('clear', function (data) {
 		// remove data
+		// todo: per presentation type?
 		var key = "drawactions:" + data.canvasName;
 		redisClient.del(key);
 
