@@ -5,10 +5,23 @@ TilesPlugin = function ($) {
 
 	var canvasName = $('#canvasName').text();
 	var tiles = [];
+	var self = this; // event closure buster
 
 	var settings = {
+		liveDrag: true
 	};
 
+	// UI -----------------------------------------------------------------------
+	$("#graphemeStimulusButton").click(function(){
+		sendAllTilesPosition();
+	});
+
+	$("#graphemeDragLive").change(function(){
+		settings.liveDrag = $('#graphemeDragLive').prop('checked');
+		$("#graphemeStimulusButton").toggle(!settings.liveDrag);
+	});
+
+	// SOCKET FUNCTIONS ---------------------------------------------------------
 	var socket = io.connect();
 
 	socket.on('connect', function () {
@@ -37,7 +50,7 @@ TilesPlugin = function ($) {
 
 	// server is telling us someone is dragging
 	socket.on('drag', function (data) {
-//		console.log('drag', data);
+		//		console.log('drag', data);
 		$('#tile-'+data.grapheme)
 			.css('top', data.y)
 			.css('left', data.x)
@@ -47,6 +60,9 @@ TilesPlugin = function ($) {
 	socket.on('cleared', function(data){
 		clearTiles();
 	});
+
+
+	// TILE FUNCTIONS -----------------------------------------------------------
 
 	function clearTiles(){
 		$('.grapheme-tile').remove();
@@ -67,13 +83,26 @@ TilesPlugin = function ($) {
 
 		jTile.draggable({
 			drag: function( event, ui ) {
-				socket.emit('drag', {
-					'x': ui.position.left,
-					'y': ui.position.top,
-					'canvasName': canvasName,
-					'grapheme': grapheme
-				});
+				if(settings.liveDrag){
+					socket.emit('drag', {
+						'x': ui.position.left,
+						'y': ui.position.top,
+						'canvasName': canvasName,
+						'grapheme': grapheme
+					});
+				}
 			}
+		});
+	}
+
+	function sendAllTilesPosition(){
+		$('.grapheme-tile').each(function(){
+			socket.emit('drag', {
+				'x': this.style.left,
+				'y': this.style.top,
+				'canvasName': canvasName,
+				'grapheme': $(this).text()
+			})
 		});
 	}
 };
