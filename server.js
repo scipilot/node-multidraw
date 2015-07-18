@@ -255,7 +255,7 @@ io.sockets.on('connection', function (socket) {
 	// SCI-WRITER TILE CONTROLLERS ----------------------------------------------------------
 
 	socket.on('drag', function(data){
-		console.log('drag', data);
+//		console.log('drag', data);
 		socket.broadcast.emit('drag', data);
 
 	});
@@ -326,8 +326,7 @@ io.sockets.on('connection', function (socket) {
 
 	// Admin has sent the next test presentation
 	socket.on('stimulus', function (data) {
-		//console.log("stimulus set:");
-		//console.log(data);
+		console.log("stimulus set:", data);
 		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
 			//console.log("fetched session:"+data.sessionName);
 			//console.log(replies);

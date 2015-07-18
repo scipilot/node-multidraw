@@ -33,6 +33,10 @@ $(function(){
 				//.css('background-image: url(\"/uploads/test'+pageNo+'.png')
 				.css("display", "inherit");//show
 		}
+		else if (stimulus.style == 4){
+			$('div#presentation-grapheme-tiles')
+				.css("display", "inherit");//show
+		}
 	});
 
 
@@ -99,9 +103,14 @@ $(function(){
 		sendStimulus($(this).text());
 		return false;
 	});
+	// GraphemeTile Presentation specific (move to mixin?)
+	$('#graphemeGeneratorButton').click(function(){
+		sendStimulus($('#graphemeList').val());
+		return false;
+	});
 
 	function sendStimulus(txt){
-		//console.log('sendStimulus('+txt);
+		console.log('sendStimulus('+txt);
 		// todo: auth
 		adminSocket.emit('stimulus', {
 			sessionName: SciWriter.sessionName,

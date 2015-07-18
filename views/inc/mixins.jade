@@ -4,3 +4,7 @@ mixin colourPicker(id, currentColour)
   select(id=id style="background-color:##{currentColour}" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor")
     each val, index in colours
       option(value=val style="background-color:#"+val selected=(currentColour==val ? "selected" : null) )= index
+
+mixin graphemeTilesStimulus(id, graphemes)
+  div#grapheme-tiles-overlay
+  div#grapheme-tiles-tray.grapheme-tiles-tray

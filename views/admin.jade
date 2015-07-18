@@ -1,7 +1,6 @@
 doctype html
 html
   include ./inc/head.jade
-  include ./inc/mixins.jade
   body
     div#cursors
     if sessionName && pageNo
@@ -10,7 +9,7 @@ html
         span
     if sessionName
       canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
-      div#tiles-overlay
+      +graphemeTilesStimulus("admin-tiles")
 
       // in-session admin control panel
       div#adminPanel
@@ -63,6 +62,13 @@ html
                 br
         div(id="presentation-images" class="presentation-controls")
           p (none yet for images)
+        div(id="presentation-grapheme-tiles" class="presentation-controls")
+          table
+            tr
+              td
+                input(id="graphemeList" value="b a t c h s ph ch i f")
+                button(id="graphemeGeneratorButton") Make tiles
+
         hr
         div.session-controls
           p: b Session controls
