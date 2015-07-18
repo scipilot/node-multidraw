@@ -273,8 +273,8 @@ io.sockets.on('connection', function (socket) {
 		// can you index 'object' instances automatically? (redis noob!)
 		redisClient.hmset("session:"+data.sessionName, {"presentation": data.presentation});
 
-		// start at page 0
-		guidedRedirect(data.sessionName, 0);
+		// start at page 1
+		guidedRedirect(data.sessionName, 1);
 	});
 
 	// Request for any previous test session data (this is similar to 'drawActionHistory')
@@ -330,7 +330,7 @@ io.sockets.on('connection', function (socket) {
 			});
 
 	});
-
+  
 	// Admin has sent the next test presentation
 	socket.on('stimulus', function (data) {
 		console.log("stimulus set:", data);

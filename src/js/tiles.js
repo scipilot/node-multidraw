@@ -38,7 +38,7 @@ TilesPlugin = function ($) {
 
 	// data.text is a space-separate list of graphemes
 	socket.on('stimulus', function(data){
-		console.log('stimulus', data);
+		console.log('TILES received stimulus:', data);
 
 		clearTiles();
 
@@ -71,12 +71,7 @@ TilesPlugin = function ($) {
 		var jTray = $('div#grapheme-tiles-tray');
 		jTray.append(jTile);
 
-		// position
-		// random
-		var w = parseFloat(jTray.css('width')) - parseFloat(jTile.css('width'));
-		var h = parseFloat(jTray.css('height')) - parseFloat(jTile.css('height'));
-		jTile.css('top', Math.random()*h);
-		jTile.css('left', Math.random()*w);
+		// note CSS layout is float left, so they just form a horizontal list
 
 		jTile.draggable({
 			drag: function( event, ui ) {

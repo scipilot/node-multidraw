@@ -45,9 +45,9 @@ SciWriterClientApp = function () {
 	// Show this in via the session's presentation strategy
 	// todo move to plugins...
 	socket.on('stimulus', function (stimulus) {
-		console.log('received stimulus: ', stimulus);
+		console.log('CLIENT received stimulus: ', stimulus);
 		if(presentation == 1 || presentation == 2){
-			console.log("Setting text stimulus...");
+			console.log("Setting TEXT stimulus...");
 			// Text
 			$('div#session-bg-text')
 				.text(stimulus.text)
