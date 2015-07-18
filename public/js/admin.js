@@ -29,7 +29,7 @@ $(function(){
 		else if (stimulus.style == 3){
 			//console.log("Setting IMAGE stimulus...");
 			// Image
-			$('div#presentation-controls-images')
+			$('div#presentation-controls-image')
 				//.css('background-image: url(\"/uploads/test'+pageNo+'.png')
 				.css("display", "inherit");//show
 		}

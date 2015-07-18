@@ -27,12 +27,12 @@ SciWriterClientApp = function () {
 		if(presentation == 1 || presentation == 2){
 			// Text
 			$("#presentation-text").show();
-			DrawPlugin(JQuery);
+			DrawPlugin($, socket);
 		}
 		else if (presentation == 3){
 			//Preset Image Backgrounds
-			$("#presentation-images").show();
-			DrawPlugin(JQuery);
+			$("#presentation-image").show();
+			DrawPlugin($, socket);
 		}
 		else if (presentation == 4){
 			// GPC tiles

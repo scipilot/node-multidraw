@@ -60,7 +60,7 @@ html
                 br
                 a(class="text-prefab-button" href="#") Sheaf
                 br
-        div(id="presentation-controls-images" class="presentation-controls")
+        div(id="presentation-controls-image" class="presentation-controls")
           p (none yet for images)
         div(id="presentation-controls-grapheme-tiles" class="presentation-controls")
           table
@@ -143,7 +143,8 @@ html
   include ./inc/foot.jade
   if sessionName
     script(src="/js/main.min.js")
-    script(src="/js/admin.js")
 
-    script(type='text/javascript')
-      $(SciWriterClientApp($));
+  script(src="/js/admin.js")
+
+  if sessionName
+    script(type='text/javascript') $(SciWriterClientApp($));

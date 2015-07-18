@@ -42,8 +42,7 @@ TilesPlugin = function ($) {
 
 		clearTiles();
 
-		data.text.split(' ').map(makeTile);
-
+		if(data.text) data.text.split(' ').map(makeTile);
 	});
 
 	// server is telling us someone is dragging

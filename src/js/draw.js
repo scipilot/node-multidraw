@@ -1,4 +1,4 @@
-DrawPlugin = function () {
+DrawPlugin = function ($, socket) {
 	if (!('getContext' in document.createElement('canvas'))) {
 		alert('Sorry, it looks like your browser does not support canvas!');
 		return false;
@@ -7,7 +7,7 @@ DrawPlugin = function () {
 	$('#status').text('Loading...')
 
 	var doc = $(document),
-		win = $(window),
+		//win = $(window),
 		canvas = $('#paper'),
 		context = canvas[0].getContext('2d'),
 		instructions = $('#instructions'),
