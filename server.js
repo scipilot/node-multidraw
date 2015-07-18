@@ -19,15 +19,17 @@ var netUsage = 0;
 
 //compress all JS into one file on startup
 new compressor.minify({
-	type: 'uglifyjs',
-	//type: 'no-compress', // for dev
+ 	//type: 'uglifyjs', // production
+	type: 'no-compress', // for dev
 	fileIn: [
 		'src/js/alertify.min.js',
 		'src/js/jquery.hammer.min.js',
 		'src/js/lzwCompress.js',
-		'src/js/draw.js'
-	],
-	fileOut: 'public/js/draw.min.js',
+		'src/js/draw.js',
+		'src/js/tiles.js',
+		'src/js/client.js'
+ 	],
+	fileOut: 'public/js/main.min.js',
 	callback: function (err, min) {
 		if (err) {
 			console.log(err);
@@ -251,6 +253,14 @@ io.sockets.on('connection', function (socket) {
 		redisClient.decr("clientcount");
 	});
 
+	// SCI-WRITER TILE CONTROLLERS ----------------------------------------------------------
+
+	socket.on('drag', function(data){
+//		console.log('drag', data);
+		socket.broadcast.emit('drag', data);
+
+	});
+
 	// SCI-WRITER TEST SESSION CONTROLLERS ----------------------------------------------------------
 
 	// Admin: create a new Test Session, and take the user to it
@@ -263,8 +273,8 @@ io.sockets.on('connection', function (socket) {
 		// can you index 'object' instances automatically? (redis noob!)
 		redisClient.hmset("session:"+data.sessionName, {"presentation": data.presentation});
 
-		// start at page 0
-		guidedRedirect(data.sessionName, 0);
+		// start at page 1
+		guidedRedirect(data.sessionName, 1);
 	});
 
 	// Request for any previous test session data (this is similar to 'drawActionHistory')
@@ -278,18 +288,24 @@ io.sockets.on('connection', function (socket) {
 			//console.log(replies);
 			var presentation = replies[0];
 
-			// get the page
+			// Send the session initialisation first (to separate from stimulus which can be repeated, in-page)
+			io.sockets.emit('session', {
+				"presentation": presentation
+			});
+
+			// Also get the page
 			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
 				//console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
 				//console.log(replies);
 				if(replies && replies.length){
 					//console.log('sending stimulus to clients... '+presentation);
-					// send the stimulus presentation index / content / filename to all clients
+
+					// Send the initial stimulus presentation index / content / filename to all clients
 					io.sockets.emit('stimulus', {
-						"style": presentation,
+						"style": presentation, // I thought about removing this, but perhaps it's more appropriate here, and could lead to combo-presentation pages?
 						"text": replies[0],
 						"filename": replies[0] //dedupe? switch on presentation type?
-					})
+					});
 				}
 			});
 		});
@@ -314,11 +330,10 @@ io.sockets.on('connection', function (socket) {
 			});
 
 	});
-
+  
 	// Admin has sent the next test presentation
 	socket.on('stimulus', function (data) {
-		//console.log("stimulus set:");
-		//console.log(data);
+		console.log("stimulus set:", data);
 		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
 			//console.log("fetched session:"+data.sessionName);
 			//console.log(replies);
@@ -395,8 +410,10 @@ io.sockets.on('connection', function (socket) {
 	}
 
 	// delete the canvas history
+	// @todo enable this to be used for other presentation types? (e.g. tiles)
 	socket.on('clear', function (data) {
 		// remove data
+		// todo: per presentation type?
 		var key = "drawactions:" + data.canvasName;
 		redisClient.del(key);
 

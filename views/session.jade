@@ -4,10 +4,12 @@ html
   body
     div#cursors
     if sessionName && pageNo
-      div#session-bg-image
-      div#session-bg-text
-        span
-    canvas#paper(width="1900" height="1000") Sorry, Your browser doesn't support canvas!
+      +textStimulus("presentation-text")
+      +imageStimulus("presentation-image")
+      +graphemeTilesStimulus("presentation-tiles")
+    +drawingPresentation("presentation-drawing", 1900, 1000)
 
   include ./inc/foot.jade
-  script(src="/js/draw.min.js")
+
+  script(src="/js/main.min.js")
+  script(type='text/javascript') $(SciWriterClientApp($));

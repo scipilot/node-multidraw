@@ -4,3 +4,22 @@ mixin colourPicker(id, currentColour)
   select(id=id style="background-color:##{currentColour}" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor")
     each val, index in colours
       option(value=val style="background-color:#"+val selected=(currentColour==val ? "selected" : null) )= index
+
+mixin textStimulus(id)
+  div(id=id class="presentation-container")
+    div#session-bg-text
+      span
+
+mixin imageStimulus(id)
+  div(id=id class="presentation-container")
+    div#session-bg-image
+
+mixin graphemeTilesStimulus(id, graphemes)
+  div(id=id class="presentation-container")
+    div#grapheme-tiles-overlay
+    div#grapheme-tiles-tray.grapheme-tiles-tray
+
+
+mixin drawingPresentation(id, width, height)
+  div(id=id class="presentation-container")
+    canvas#paper(width=width height=height) Your browser doesn't support canvas!

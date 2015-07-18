@@ -1,15 +1,16 @@
 doctype html
 html
   include ./inc/head.jade
-  include ./inc/mixins.jade
   body
     div#cursors
     if sessionName && pageNo
-      div#session-bg-image
-      div#session-bg-text
-        span
+    if sessionName && pageNo
+      +textStimulus("presentation-text")
+      +imageStimulus("presentation-image")
+      +graphemeTilesStimulus("presentation-tiles")
     if sessionName
-      canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
+      +drawingPresentation("presentation-drawing", 1900, 1000)
+
       // in-session admin control panel
       div#adminPanel
         h1#bigTitle Remote Test Administration
@@ -21,7 +22,7 @@ html
         hr
         // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
         p: b Presentation controls
-        div(id="presentation-text" class="presentation-controls")
+        div(id="presentation-controls-text" class="presentation-controls")
           table
             tr
               td
@@ -35,7 +36,7 @@ html
                 button(id="stimulusButton" style="width:100%") Show now
                 br
                 button(id="stimulusNextPageButton"  style="width:100%") Show next &gt;
-        div(id="presentation-text-prefab" class="presentation-controls")
+        div(id="presentation-controls-text-prefab" class="presentation-controls")
           table
             tr
               td
@@ -59,8 +60,19 @@ html
                 br
                 a(class="text-prefab-button" href="#") Sheaf
                 br
-        div(id="presentation-images" class="presentation-controls")
+        div(id="presentation-controls-image" class="presentation-controls")
           p (none yet for images)
+        div(id="presentation-controls-grapheme-tiles" class="presentation-controls")
+          table
+            tr
+              td
+                input(id="graphemeList" value="b a t c h s ph ch i f")
+                button(id="graphemeGeneratorButton") Make tiles
+                br
+                label
+                  input(type="checkbox" id="graphemeDragLive" value="1" checked)
+                  | Drag live
+                button(id="graphemeStimulusButton") Show now
         hr
         div.session-controls
           p: b Session controls
@@ -87,6 +99,7 @@ html
                     option(value="1") Free Text
                     option(value="2") Preset Text
                     option(value="3") Preset Image Backgrounds
+                    option(value="4") GPC Tiles
                   button(id="newSessionButton") GO!
         br
         hr
@@ -129,5 +142,9 @@ html
 
   include ./inc/foot.jade
   if sessionName
-      script(src="/js/draw.min.js")
-    script(src="/js/admin.js")
+    script(src="/js/main.min.js")
+
+  script(src="/js/admin.js")
+
+  if sessionName
+    script(type='text/javascript') $(SciWriterClientApp($));

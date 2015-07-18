@@ -10,31 +10,34 @@ $(function(){
 	});
 
 	adminSocket.on('stimulus', function (stimulus) {
-		//console.log('received stimulus: ');
-		//console.log(stimulus);
+		console.log('ADMIN received stimulus: ', stimulus);
 		if(stimulus.style == 1){
-			//console.log("Setting text stimulus...");
+			console.log("Setting text stimulus...");
 			// Text
-			$('div#presentation-text')
+			$('div#presentation-controls-text')
 				//.text(stimulus.text)
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 2){
-			//console.log("Setting PRESET TEXT stimulus...");
+			console.log("Setting PRESET TEXT stimulus...");
 			// Text
-			$('div#presentation-text-prefab')
+			$('div#presentation-controls-text-prefab')
 				//.text(stimulus.text)
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 3){
-			//console.log("Setting IMAGE stimulus...");
+			console.log("Setting IMAGE stimulus...");
 			// Image
-			$('div#presentation-images')
+			$('div#presentation-controls-image')
 				//.css('background-image: url(\"/uploads/test'+pageNo+'.png')
 				.css("display", "inherit");//show
 		}
+		else if (stimulus.style == 4){
+			console.log("Setting TILES stimulus...");
+			$('div#presentation-controls-grapheme-tiles')
+				.css("display", "inherit");//show
+		}
 	});
-
 
 	// Admin panel
 	// todo: security only allow "admin" to do this - how? (without an auth plugin) use the client 'id'? this will only work for the browser 'session'
@@ -99,9 +102,14 @@ $(function(){
 		sendStimulus($(this).text());
 		return false;
 	});
+	// GraphemeTile Presentation specific (move to mixin?)
+	$('#graphemeGeneratorButton').click(function(){
+		sendStimulus($('#graphemeList').val());
+		return false;
+	});
 
 	function sendStimulus(txt){
-		//console.log('sendStimulus('+txt);
+		console.log('sendStimulus('+txt);
 		// todo: auth
 		adminSocket.emit('stimulus', {
 			sessionName: SciWriter.sessionName,
