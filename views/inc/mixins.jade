@@ -5,6 +5,21 @@ mixin colourPicker(id, currentColour)
     each val, index in colours
       option(value=val style="background-color:#"+val selected=(currentColour==val ? "selected" : null) )= index
 
+mixin textStimulus(id)
+  div(id=id class="presentation-container")
+    div#session-bg-text
+      span
+
+mixin imageStimulus(id)
+  div(id=id class="presentation-container")
+    div#session-bg-image
+
 mixin graphemeTilesStimulus(id, graphemes)
-  div#grapheme-tiles-overlay
-  div#grapheme-tiles-tray.grapheme-tiles-tray
+  div(id=id class="presentation-container")
+    div#grapheme-tiles-overlay
+    div#grapheme-tiles-tray.grapheme-tiles-tray
+
+
+mixin drawingPresentation(id, width, height)
+  div(id=id class="presentation-container")
+    canvas#paper(width=width height=height) Your browser doesn't support canvas!

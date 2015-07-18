@@ -258,6 +258,10 @@ div.session-list{
 div.presentation-controls{
     display: none;
 }
+/* various strategies are hidden, shown per session */
+div.presentation-container{
+    display:none;
+}
 div#session-bg-image{
     position: absolute;
     width:100%;

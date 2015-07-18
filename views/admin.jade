@@ -4,12 +4,12 @@ html
   body
     div#cursors
     if sessionName && pageNo
-      div#session-bg-image
-      div#session-bg-text
-        span
+    if sessionName && pageNo
+      +textStimulus("presentation-text")
+      +imageStimulus("presentation-image")
+      +graphemeTilesStimulus("presentation-tiles")
     if sessionName
-      canvas#paper(width="1900" height="1000") Your browser doesn't support canvas!
-      +graphemeTilesStimulus("admin-tiles")
+      +drawingPresentation("presentation-drawing", 1900, 1000)
 
       // in-session admin control panel
       div#adminPanel
@@ -22,7 +22,7 @@ html
         hr
         // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
         p: b Presentation controls
-        div(id="presentation-text" class="presentation-controls")
+        div(id="presentation-controls-text" class="presentation-controls")
           table
             tr
               td
@@ -36,7 +36,7 @@ html
                 button(id="stimulusButton" style="width:100%") Show now
                 br
                 button(id="stimulusNextPageButton"  style="width:100%") Show next &gt;
-        div(id="presentation-text-prefab" class="presentation-controls")
+        div(id="presentation-controls-text-prefab" class="presentation-controls")
           table
             tr
               td
@@ -60,9 +60,9 @@ html
                 br
                 a(class="text-prefab-button" href="#") Sheaf
                 br
-        div(id="presentation-images" class="presentation-controls")
+        div(id="presentation-controls-images" class="presentation-controls")
           p (none yet for images)
-        div(id="presentation-grapheme-tiles" class="presentation-controls")
+        div(id="presentation-controls-grapheme-tiles" class="presentation-controls")
           table
             tr
               td
@@ -146,5 +146,4 @@ html
     script(src="/js/admin.js")
 
     script(type='text/javascript')
-      $(TilesPlugin($));
-
+      $(SciWriterClientApp($));

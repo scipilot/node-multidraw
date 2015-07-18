@@ -42,24 +42,15 @@ DrawPlugin = function () {
 		$('#canvasName').text('Main Lobby');
 	}
 
+	$("#presentation-drawing").show();
+
 	$('#status').text('Connecting...')
-	var socket = io.connect();
 
 	socket.on('connect', function () {
 		$('#status').text('Connected').fadeOut(5000);
 		socket.emit('drawActionHistory', {
 			canvasName: canvasName
 		});
-
-		// todo: make the test session handling a plugin module - not in the main draw.js
-		if(typeof(SciWriter.sessionName) != "undefined"){
-			// Note this will result in a 'stimulus' response, which is also sent from admin-UI on demand during sessions.
-			// Receiving it on-connect would be from a) DB/CMS/preset-list in the sequence or b) when re-viewing previous session, and wanting to see the drawing in context with the chosen stimulus
-			socket.emit('getSession', {
-				sessionName: SciWriter.sessionName,
-				pageNo: SciWriter.pageNo
-			});
-		}
 	});
 
 	socket.on('moving', function (data) {
@@ -130,29 +121,6 @@ DrawPlugin = function () {
 
 		context.drawImage(osc, 0, 0);
 		$('#status').text("");
-	});
-
-	// server sent us the test stimulus: word/image background
-	// show this in the right format
-	// todo - move this out to modular strategies, we will definitely add more of these stimulus presentation methods
-	socket.on('stimulus', function (stimulus) {
-		//console.log('received stimulus: ');
-		//console.log(stimulus);
-		if(stimulus.style == 1 || stimulus.style == 2){
-			//console.log("Setting text stimulus...");
-			// Text
-			$('div#session-bg-text')
-				.text(stimulus.text)
-				.css("display", "inherit");
-		}
-		else if (stimulus.style == 3){
-			//console.log("Setting IMAGE stimulus...");
-			// Image
-			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');
-			$('div#session-bg-image')
-				.css('background-image', 'url("/uploads/test'+SciWriter.pageNo+'.png")')
-				.css("display", "inherit");
-		}
 	});
 
 	socket.on('options', function(options){

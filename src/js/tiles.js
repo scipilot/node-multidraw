@@ -42,9 +42,7 @@ TilesPlugin = function ($) {
 
 		clearTiles();
 
-		var gs = data.text.split(' ');
-		var i;
-		gs.map(makeTile);
+		data.text.split(' ').map(makeTile);
 
 	});
 

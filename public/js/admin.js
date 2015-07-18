@@ -15,26 +15,26 @@ $(function(){
 		if(stimulus.style == 1){
 			//console.log("Setting text stimulus...");
 			// Text
-			$('div#presentation-text')
+			$('div#presentation-controls-text')
 				//.text(stimulus.text)
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 2){
 			//console.log("Setting PRESET TEXT stimulus...");
 			// Text
-			$('div#presentation-text-prefab')
+			$('div#presentation-controls-text-prefab')
 				//.text(stimulus.text)
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 3){
 			//console.log("Setting IMAGE stimulus...");
 			// Image
-			$('div#presentation-images')
+			$('div#presentation-controls-images')
 				//.css('background-image: url(\"/uploads/test'+pageNo+'.png')
 				.css("display", "inherit");//show
 		}
 		else if (stimulus.style == 4){
-			$('div#presentation-grapheme-tiles')
+			$('div#presentation-controls-grapheme-tiles')
 				.css("display", "inherit");//show
 		}
 	});

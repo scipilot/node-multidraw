@@ -4,20 +4,13 @@ html
   body
     div#cursors
     if sessionName && pageNo
-      div#session-bg-image
-      div#session-bg-text
-        span
-    canvas#paper(width="1900" height="1000") Sorry, please use a more modern browser!
-    +graphemeTilesStimulus("session-tiles")
+      +textStimulus("presentation-text")
+      +imageStimulus("presentation-image")
+      +graphemeTilesStimulus("presentation-tiles")
+    +drawingPresentation("presentation-drawing", 1900, 1000)
 
   include ./inc/foot.jade
 
   script(src="/js/main.min.js")
-
-  // LOAD ON STIMULUS PRESENTATION STRATEGY
-  //if(stimulus.style == 4)
   script(type='text/javascript')
-    $(TilesPlugin($));
-  //else
-  //  script(type='text/javascript')
-      $(DrawPlugin(JQuery));
+    $(SciWriterClientApp($));

@@ -26,8 +26,9 @@ new compressor.minify({
 		'src/js/jquery.hammer.min.js',
 		'src/js/lzwCompress.js',
 		'src/js/draw.js',
-		'src/js/tiles.js'
-	],
+		'src/js/tiles.js',
+		'src/js/client.js'
+ 	],
 	fileOut: 'public/js/main.min.js',
 	callback: function (err, min) {
 		if (err) {
@@ -287,18 +288,24 @@ io.sockets.on('connection', function (socket) {
 			//console.log(replies);
 			var presentation = replies[0];
 
-			// get the page
+			// Send the session initialisation first (to separate from stimulus which can be repeated, in-page)
+			io.sockets.emit('session', {
+				"presentation": presentation
+			});
+
+			// Also get the page
 			redisClient.hmget("session:"+data.sessionName+":"+data.pageNo, "stimulus", function(err, replies){
 				//console.log("fetched page session:"+data.sessionName+":"+data.pageNo);
 				//console.log(replies);
 				if(replies && replies.length){
 					//console.log('sending stimulus to clients... '+presentation);
-					// send the stimulus presentation index / content / filename to all clients
+
+					// Send the initial stimulus presentation index / content / filename to all clients
 					io.sockets.emit('stimulus', {
-						"style": presentation,
+						"style": presentation, // I thought about removing this, but perhaps it's more appropriate here, and could lead to combo-presentation pages?
 						"text": replies[0],
 						"filename": replies[0] //dedupe? switch on presentation type?
-					})
+					});
 				}
 			});
 		});
