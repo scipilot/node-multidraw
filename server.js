@@ -263,6 +263,10 @@ io.sockets.on('connection', function (socket) {
 
 	});
 
+	socket.on('drop', function(data){
+		socket.broadcast.emit('drop', data);
+	});
+
 	// SCI-WRITER TEST SESSION CONTROLLERS ----------------------------------------------------------
 
 	// Admin: create a new Test Session, and take the user to it

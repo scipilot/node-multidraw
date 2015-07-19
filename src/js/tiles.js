@@ -14,6 +14,16 @@ TilesPlugin = function ($, socket) {
 
 	// UI -----------------------------------------------------------------------
 
+	$('div#grapheme-tiles-tray').droppable({
+		accept: ".grapheme-tile",
+		drop: function( event, ui ) {
+			socket.emit('drop',{
+				'canvasName': canvasName,
+				'grapheme': $(ui.draggable).text()
+			})
+		}
+	});
+
 	// Admin
 	$("#graphemeStimulusButton").click(function(){
 		sendAllTilesPosition();
@@ -42,7 +52,7 @@ TilesPlugin = function ($, socket) {
 			$('#graphemeTrayVisible').prop('checked', settings.graphemeTrayVisible);
 		}
 		else {
-			$('div#grapheme-tiles-tray').toggle(settings.graphemeTrayVisible);
+			$('div#grapheme-tiles-tray').css('visibility', settings.graphemeTrayVisible ? 'visible' : 'hidden');
 		}
 	});
 
@@ -58,10 +68,18 @@ TilesPlugin = function ($, socket) {
 	// server is telling us someone is dragging
 	socket.on('drag', function (data) {
 		//		console.log('drag', data);
+		// todo: doesn't allow two of the same tile! use a GUID...
 		$('#tile-'+data.grapheme)
 			.css('top', data.y)
 			.css('left', data.x)
+			.css('visibility', 'visible')
 		;
+	});
+	// hide back into a hidden tray
+	socket.on('drop', function (data) {
+		console.log('TILES got drop', data);
+		//$('#tile-'+data.grapheme).css('visibility', settings.graphemeTrayVisible ? 'visible' : 'hidden');
+		$('#tile-'+data.grapheme).css('visibility', 'inherit');
 	});
 
 	socket.on('cleared', function(data){
