@@ -26,6 +26,10 @@ SciWriterClientApp = function ($, SciWriterApp) {
 			// also request the options. The plugins receive these (there's no general options yet)).
 			socket.emit('options');
 		}
+		else {
+			// welcome screen?
+			presentation = DrawPlugin($, socket);
+		}
 	});
 
 	// Set up the presentation strategies
@@ -76,6 +80,11 @@ SciWriterClientApp = function ($, SciWriterApp) {
 				.css('background-image', 'url("/uploads/test'+SciWriterApp.pageNo+'.png")')
 				.css("display", "inherit");
 		}
+	});
+
+	// Guided navigation - usually from admin to user
+	socket.on('redirect', function(data){
+		window.location = data.url;
 	});
 
 	return this;
