@@ -75,6 +75,7 @@ TilesPlugin = function ($, socket) {
 			.css('visibility', 'visible')
 		;
 	});
+
 	// hide back into a hidden tray
 	socket.on('drop', function (data) {
 		console.log('TILES got drop', data);
@@ -117,12 +118,16 @@ TilesPlugin = function ($, socket) {
 
 	function sendAllTilesPosition(){
 		$('.grapheme-tile').each(function(){
-			socket.emit('drag', {
-				'x': this.style.left,
-				'y': this.style.top,
-				'canvasName': canvasName,
-				'grapheme': $(this).text()
-			})
+			// it's a bit of a hack, to send a fake drag for all tiles above the tray, i.e. on the canvas,
+			// limit to only those, because the on-drag above shows the tile - again a bit side-effecty.
+			// perhaps we should track dropped in/out of the tray with a css class?
+			if(parseFloat(this.style.top) < 0)
+				socket.emit('drag', {
+					'x': this.style.left,
+					'y': this.style.top,
+					'canvasName': canvasName,
+					'grapheme': $(this).text()
+				})
 		});
 	}
 
