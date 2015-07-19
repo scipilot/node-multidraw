@@ -1,21 +1,21 @@
 /**
  * The client app manages the connection to the server and loads presentation plugins.
  */
-SciWriterClientApp = function () {
+SciWriterClientApp = function ($, SciWriterApp) {
 	var socket = io.connect();
 	// The stimulus presentation strategy ID
 	var presentationId = 0, presentation;
 
 	socket.on('connect', function () {
 
-		if(typeof(SciWriter.sessionName) != "undefined"){
+		if(typeof(SciWriterApp.sessionName) != "undefined"){
 
 			// This will result in a 'session' response.
 			// Also an initial 'stimulus' response, which is also sent from admin-UI on demand during sessions.
 			// Receiving it on-connect would be from a) DB/CMS/preset-list in the sequence or b) when re-viewing previous session, and wanting to see the drawing in context with the chosen stimulus
 			socket.emit('getSession', {
-				sessionName: SciWriter.sessionName,
-				pageNo: SciWriter.pageNo
+				sessionName: SciWriterApp.sessionName,
+				pageNo: SciWriterApp.pageNo
 			});
 
 			// also request the options. The plugins receive these (there's no general options yet)).
@@ -68,9 +68,10 @@ SciWriterClientApp = function () {
 			// Image
 			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');
 			$('div#session-bg-image')
-				.css('background-image', 'url("/uploads/test'+SciWriter.pageNo+'.png")')
+				.css('background-image', 'url("/uploads/test'+SciWriterApp.pageNo+'.png")')
 				.css("display", "inherit");
 		}
 	});
 
+	return this;
 };

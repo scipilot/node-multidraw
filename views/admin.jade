@@ -18,7 +18,7 @@ html
         h2  User screen at:&nbsp;
           a(href="/s/#{sessionName}/#{pageNo}" target="_blank") /s/#{sessionName}/#{pageNo}
         h2 Admin pen colour
-          +colourPicker("adminPenColour", options.adminPenColour)
+          +colourPicker("adminPenColour", "000")
         hr
         // J.S. Hides/shows different stimulus ui (image/text) depending on admin's initial presentation choice
         p: b Presentation controls
@@ -148,7 +148,7 @@ html
   if sessionName
     script(src="/js/main.min.js")
 
-  script(src="/js/admin.js")
+  script(src="/js/admin.min.js")
 
   if sessionName
-    script(type='text/javascript') $(SciWriterClientApp($));
+    script(type='text/javascript') $(SciWriterClientApp($, SciWriter));

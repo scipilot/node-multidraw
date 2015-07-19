@@ -38,6 +38,18 @@ new compressor.minify({
 	outSourceMap:true// couldn't get it to work via node-minify... doesn't it pass all the uglify options through?
 });
 
+//admin is separate, for security
+new compressor.minify({
+	//type: 'uglifyjs', // production
+	type: 'no-compress', // for dev
+	fileIn: [
+		'src/js/admin.js'
+	],
+	fileOut: 'public/js/admin.min.js',
+	callback: function (err, min) { if (err) console.log(err); },
+	outSourceMap:true
+});
+
 //compress css
 new compressor.minify({
 	type: 'clean-css',

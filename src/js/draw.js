@@ -83,6 +83,7 @@ DrawPlugin = function ($, socket) {
 	socket.on('cleared', function(data){
 		if(data.canvasName == canvasName)	clearCanvas();
 	});
+
 	function clearCanvas(){
 		context.clearRect(0, 0, canvas.width(), canvas.height());
 	}
