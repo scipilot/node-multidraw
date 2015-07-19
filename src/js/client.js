@@ -4,40 +4,50 @@
 SciWriterClientApp = function () {
 	var socket = io.connect();
 	// The stimulus presentation strategy ID
-	var presentation = 0;
+	var presentationId = 0, presentation;
 
 	socket.on('connect', function () {
 
 		if(typeof(SciWriter.sessionName) != "undefined"){
-			// Note this will result in a 'stimulus' response, which is also sent from admin-UI on demand during sessions.
+
+			// This will result in a 'session' response.
+			// Also an initial 'stimulus' response, which is also sent from admin-UI on demand during sessions.
 			// Receiving it on-connect would be from a) DB/CMS/preset-list in the sequence or b) when re-viewing previous session, and wanting to see the drawing in context with the chosen stimulus
 			socket.emit('getSession', {
 				sessionName: SciWriter.sessionName,
 				pageNo: SciWriter.pageNo
 			});
+
+			// also request the options. The plugins receive these (there's no general options yet)).
+			socket.emit('options');
 		}
 	});
 
 	// Set up the presentation strategies
 	socket.on('session', function (data) {
-		console.log('received session: ', data);
-		presentation = data.presentation;
+		console.log('CLIENT received session: ', data);
 
-		// Load up the right presentation and input plugins
-		if(presentation == 1 || presentation == 2){
-			// Text
-			$("#presentation-text").show();
-			DrawPlugin($, socket);
-		}
-		else if (presentation == 3){
-			//Preset Image Backgrounds
-			$("#presentation-image").show();
-			DrawPlugin($, socket);
-		}
-		else if (presentation == 4){
-			// GPC tiles
-			$("#presentation-tiles").show();
-			TilesPlugin($);
+		presentationId = data.presentation;
+		// pseudosingleton
+		if(!presentation){
+			console.log('CLIENT loading presentation: ', presentationId, presentation);
+
+			// Load up the right presentation and input plugins
+			if(presentationId == 1 || presentationId == 2){
+				// Text
+				$("#presentation-text").show();
+				presentation = DrawPlugin($, socket);
+			}
+			else if (presentationId == 3){
+				//Preset Image Backgrounds
+				$("#presentation-image").show();
+				presentation = DrawPlugin($, socket);
+			}
+			else if (presentationId == 4){
+				// GPC tiles
+				$("#presentation-tiles").show();
+				presentation = TilesPlugin($, socket);
+			}
 		}
 	});
 
@@ -46,14 +56,14 @@ SciWriterClientApp = function () {
 	// todo move to plugins...
 	socket.on('stimulus', function (stimulus) {
 		console.log('CLIENT received stimulus: ', stimulus);
-		if(presentation == 1 || presentation == 2){
+		if(presentationId == 1 || presentationId == 2){
 			console.log("Setting TEXT stimulus...");
 			// Text
 			$('div#session-bg-text')
 				.text(stimulus.text)
 				.css("display", "inherit");
 		}
-		else if (presentation == 3){
+		else if (presentationId == 3){
 			console.log("Setting IMAGE stimulus...");
 			// Image
 			//$('div#session-bg-image').css('background-image: url(\"/uploads/'+stimulus.filename+'")');

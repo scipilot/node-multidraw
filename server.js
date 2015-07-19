@@ -121,6 +121,8 @@ function renderWithOptions(res, viewName, viewModel){
 		if(options === null) options = {adminPenColour: '000', subjectPenColour:'000', subjectPenSize:3};
 
 		// todo: move role-specific stuff to a handler?
+		// todo: this is all duplicated in the getOptions. Why not just call socket('options') on connect?
+		// 			 and avoid all this jade bakery...
 		options.penColour = (viewModel.role == 'admin') ? options.adminPenColour : options.subjectPenColour;
 		options.penSize = options.subjectPenSize; // make admin size too?
 
@@ -289,7 +291,7 @@ io.sockets.on('connection', function (socket) {
 			var presentation = replies[0];
 
 			// Send the session initialisation first (to separate from stimulus which can be repeated, in-page)
-			io.sockets.emit('session', {
+			socket.emit('session', {
 				"presentation": presentation
 			});
 
@@ -308,46 +310,6 @@ io.sockets.on('connection', function (socket) {
 					});
 				}
 			});
-		});
-	});
-
-	socket.on('options', function(data){
-			getOptionsList(function(options){
-
-				//
-				options.roles = {
-					admin: {
-						penColour: options.adminPenColour,
-						penSize: options.subjectPenSize
-					},
-					user: {
-						penColour: options.subjectPenColour,
-						penSize: options.subjectPenSize
-					}
-				};
-
-				socket.emit('options',options);
-			});
-
-	});
-  
-	// Admin has sent the next test presentation
-	socket.on('stimulus', function (data) {
-		console.log("stimulus set:", data);
-		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
-			//console.log("fetched session:"+data.sessionName);
-			//console.log(replies);
-
-			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
-			// Save the stimulus into the session, for later review.
-			redisClient.hmset("session:"+data.sessionName+":"+data.pageNo, {"stimulus":data.text});
-
-			// send the stimulus presentation index / content / filename to all clients
-			io.sockets.emit('stimulus', {
-				"style": replies[0],
-				"text": data.text,
-				"filename": data.text
-			})
 		});
 	});
 
@@ -382,6 +344,64 @@ io.sockets.on('connection', function (socket) {
 			}
 		});
 	});
+
+	// Save an app option (admin only)
+	socket.on('setOption', function(data){
+		setAppOption(data.key, data.val);
+
+		// update everyone else
+		getRoleOptions(function(options){
+			socket.broadcast.emit('options',options);
+		});
+	});
+
+	socket.on('options', function(data){
+		getRoleOptions(function(options){
+			socket.emit('options',options);
+		});
+	});
+
+	// Adds role-specific options for admin/user
+	// todo: encapsulate this knowledge in the plugins
+	function getRoleOptions(cb){
+			getOptionsList(function(options){
+
+				options.roles = {
+					admin: {
+						penColour: options.adminPenColour,
+						penSize: options.subjectPenSize, 	// no admin size
+						//graphemeTrayVisible: "true" 			// always shown
+					},
+					user: {
+						penColour: options.subjectPenColour,
+						penSize: options.subjectPenSize,
+						//graphemeTrayVisible: options.graphemeTrayVisible
+					}
+				};
+				cb(options)
+		});
+	}
+  
+	// Admin has sent the next test presentation
+	socket.on('stimulus', function (data) {
+		console.log("stimulus set:", data);
+		redisClient.hmget("session:"+data.sessionName, "presentation", function(err, replies){
+			//console.log("fetched session:"+data.sessionName);
+			//console.log(replies);
+
+			// TODO: GET THE STIMULUS WORD/IMAGE FROM CMS/DATABASE/presets... (later)
+			// Save the stimulus into the session, for later review.
+			redisClient.hmset("session:"+data.sessionName+":"+data.pageNo, {"stimulus":data.text});
+
+			// send the stimulus presentation index / content / filename to all clients
+			io.sockets.emit('stimulus', {
+				"style": replies[0],
+				"text": data.text,
+				"filename": data.text
+			})
+		});
+	});
+
 
 	// Admin: next canvas page, and take the user to it
 	socket.on('next', function (data) {
@@ -426,11 +446,6 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('cleared', data);
 		// todo: how to broadcast only to this canvas? (But... currently the whole app doesn't respect the canvas ID, even mouse moves go to all clients regardless of canvas/URL. Maybe a redis hash of sockets-canvases.)
 		// 			 Quick Workaround: I'm relying on the client to validate the data.canvasName
-	});
-
-	// save an app option (admin only)
-	socket.on('setOption', function(data){
-		setAppOption(data.key, data.val);
 	});
 
 });
@@ -480,7 +495,7 @@ function getOptionsList(cb){
 
 // Application option persistence
 function setAppOption(key, val){
-		//console.log("setAppOption:", key, val);
+	console.log("setAppOption:", key, val);
 	redisClient.hset("options", key, val);
 }
 function getAppOption(key, cb){

@@ -357,4 +357,5 @@ DrawPlugin = function ($, socket) {
 		}
 	});
 
-}
+	return this;
+};
