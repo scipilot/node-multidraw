@@ -145,10 +145,6 @@ html
                   a(class="deleteSession" data-session-name="#{row}" href="javascript:void(0);") X
 
   include ./inc/foot.jade
-  if sessionName
-    script(src="/js/main.min.js")
-
+  script(src="/js/main.min.js")
   script(src="/js/admin.min.js")
-
-  if sessionName
-    script(type='text/javascript') $(SciWriterClientApp($, SciWriter));
+  script(type='text/javascript') $(SciWriterClientApp($, SciWriter));

@@ -6,6 +6,11 @@ SciWriterClientApp = function ($, SciWriterApp) {
 	// The stimulus presentation strategy ID
 	var presentationId = 0, presentation, admin;
 
+	// Create the admin plugin, before connecting.
+	if(SciWriterApp.role == 'admin'){
+		if(!admin) admin = AdminPlugin($, socket);
+	}
+
 	socket.on('connect', function () {
 
 		if(typeof(SciWriterApp.sessionName) != "undefined"){
@@ -47,11 +52,6 @@ SciWriterClientApp = function ($, SciWriterApp) {
 				// GPC tiles
 				$("#presentation-tiles").show();
 				presentation = TilesPlugin($, socket);
-			}
-			if(SciWriterApp.role == 'admin'){
-				if(!admin){
-					admin = AdminPlugin($, socket);
-				}
 			}
 		}
 	});

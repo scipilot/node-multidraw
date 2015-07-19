@@ -1,22 +1,14 @@
+// Client-end functions, needed for the admin screens.
 AdminPlugin = function($, adminSocket){
-
-	// Cut-down version of the client end socket functions, needed for the admin screens.
-	// todo: there is some overlap - could be a common one?
-
-	//var adminSocket = io.connect();
-
-	adminSocket.on("connect", function(){
-		adminSocket.emit("options");
-	});
-
-	adminSocket.on('redirect', function(data){
-		window.location = data.url;
-	});
 
 	adminSocket.on('options', function (options) {
 		$("#subjectPenSize").val(options.subjectPenSize);
 		$("#adminPenColour").val(options.adminPenColour).change(); // manually fire onChange event.
 		$("#subjectPenColour").val(options.subjectPenColour).change();
+	});
+
+	adminSocket.on('redirect', function(data){
+		window.location = data.url;
 	});
 
 	adminSocket.on('stimulus', function (stimulus) {
@@ -79,7 +71,6 @@ AdminPlugin = function($, adminSocket){
 	});
 	$('#adminPenColour').change(function(){
 		adminSocket.emit('setOption', {key:'adminPenColour', val:$('#adminPenColour option:selected').val()})
-		adminSocket.emit('options');// refresh from options.
 	});
 
 	// In-Test admin panel
