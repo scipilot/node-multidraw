@@ -418,7 +418,9 @@ io.sockets.on('connection', function (socket) {
 	// Admin: finish a Test Session
 	socket.on('end', function (data) {
 
-		// todo: USER "WELL DONE!" PAGE. socket.broadcast.emit('redirect', {url:'/s/'+sessionName+'/'+pageNo});
+		// todo: USER "WELL DONE!" PAGE?
+		socket.broadcast.emit('redirect', {url:'/'});
+
 		// ADMIN: back to home
 		socket.emit('redirect', {url:'/a/'});
 	});
