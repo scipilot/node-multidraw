@@ -1,9 +1,9 @@
-$(function(){
+AdminPlugin = function($, adminSocket){
 
 	// Cut-down version of the client end socket functions, needed for the admin screens.
 	// todo: there is some overlap - could be a common one?
 
-	var adminSocket = io.connect();
+	//var adminSocket = io.connect();
 
 	adminSocket.on("connect", function(){
 		adminSocket.emit("options");
@@ -128,4 +128,5 @@ $(function(){
 		})
 	}
 
-});
+	return this;
+};

@@ -4,7 +4,7 @@
 SciWriterClientApp = function ($, SciWriterApp) {
 	var socket = io.connect();
 	// The stimulus presentation strategy ID
-	var presentationId = 0, presentation;
+	var presentationId = 0, presentation, admin;
 
 	socket.on('connect', function () {
 
@@ -47,6 +47,11 @@ SciWriterClientApp = function ($, SciWriterApp) {
 				// GPC tiles
 				$("#presentation-tiles").show();
 				presentation = TilesPlugin($, socket);
+			}
+			if(SciWriterApp.role == 'admin'){
+				if(!admin){
+					admin = AdminPlugin($, socket);
+				}
 			}
 		}
 	});
