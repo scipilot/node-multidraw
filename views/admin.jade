@@ -114,20 +114,20 @@ html
             tr
               td Admin pen colour
               td
-                +colourPicker("adminPenColour", options.adminPenColour)
+                +colourPicker("adminPenColour", '000')
             tr
               td Subject Pen Colour
               td
-                +colourPicker("subjectPenColour", options.subjectPenColour)
+                +colourPicker("subjectPenColour", '000')
             tr
               td Subject Pen Size
               td
                 select(id="subjectPenSize")
-                  option(value="1"  selected=(options.subjectPenSize== "1" ? "selected" : null) ) 1
-                  option(value="3"  selected=(options.subjectPenSize== "3" ? "selected" : null) ) 2
-                  option(value="5"  selected=(options.subjectPenSize== "4" ? "selected" : null) ) 3
-                  option(value="10" selected=(options.subjectPenSize=="10" ? "selected" : null) ) 4
-                  option(value="20" selected=(options.subjectPenSize=="20" ? "selected" : null) ) 5
+                  option(value="1"  ) 1
+                  option(value="3"  ) 2
+                  option(value="5"  ) 3
+                  option(value="10" ) 4
+                  option(value="20" ) 5
                 small  (not stored in drawing)
         hr
         br
@@ -140,7 +140,7 @@ html
             each row in sessionList
               tr
                 td
-                  a(href="/a/#{row}/0") #{row}
+                  a(href="/a/#{row}/1") #{row}
                 td
                   a(class="deleteSession" data-session-name="#{row}" href="javascript:void(0);") X
 

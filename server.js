@@ -69,14 +69,13 @@ app.get('/', function (req, res) {
 	res.render('main.jade', {
 		sessionName: '',
 		pageNo: 0,
-		role:'user',
-		options: {}
+		role:'user'
 	});
 });
 
 /* User canvas */
 app.get("/c/:canvasname", function (req, res, next) {
-	renderWithOptions(res, 'main.jade', {
+	res.render('main.jade', {
 		canvasName: req.params.canvasname,
 		sessionName: '',
 		pageNo: 0,
@@ -85,7 +84,7 @@ app.get("/c/:canvasname", function (req, res, next) {
 });
 /* User guided session */
 app.get("/s/:sessionName/:pageNo", function (req, res, next) {
-	renderWithOptions(res, 'session.jade', {
+	res.render('session.jade', {
 		sessionName: req.params.sessionName,
 		pageNo: req.params.pageNo,
 		canvasName: req.params.sessionName+'.'+req.params.pageNo,
@@ -96,7 +95,7 @@ app.get("/s/:sessionName/:pageNo", function (req, res, next) {
 /* Admin */
 app.get("/a/", function (req, res, next) {
 	getSessionList(function(sessions){
-		renderWithOptions(res, 'admin.jade', {
+		res.render('admin.jade', {
 			sessionName: '',
 			pageNo: 0,
 			sessionList:sessions,
@@ -104,33 +103,16 @@ app.get("/a/", function (req, res, next) {
 		});
 	});
 });
+
 /* Admin view-canvas */
 app.get("/a/:sessionName/:pageNo", function (req, res, next) {
-	renderWithOptions(res,'admin.jade', {
+	res.render('admin.jade', {
 		canvasName: req.params.sessionName+'.'+req.params.pageNo,
 		sessionName: req.params.sessionName,
 		pageNo: req.params.pageNo,
 		role: 'admin'
-		//presentationStyle:
 	});
 });
-
-/** Renders a view with any previously persisted app options injected into the viewModel */
-function renderWithOptions(res, viewName, viewModel){
-	getOptionsList(function(options){
-		if(options === null) options = {adminPenColour: '000', subjectPenColour:'000', subjectPenSize:3};
-
-		// todo: move role-specific stuff to a handler?
-		// todo: this is all duplicated in the getOptions. Why not just call socket('options') on connect?
-		// 			 and avoid all this jade bakery...
-		options.penColour = (viewModel.role == 'admin') ? options.adminPenColour : options.subjectPenColour;
-		options.penSize = options.subjectPenSize; // make admin size too?
-
-		viewModel.options = options;
-		//console.log('renderWithOptions', viewName, viewModel);
-		res.render(viewName, viewModel);
-	});
-}
 
 redisClient.on("error", function (err) {
 	console.log("Redis Error: " + err);

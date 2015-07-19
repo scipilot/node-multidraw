@@ -13,7 +13,7 @@ DrawPlugin = function ($, socket) {
 		instructions = $('#instructions'),
 		colourTabOpen = true,
 		settingsTabOpen = false,
-		setColor = '#'+options.penColour,
+		setColor = '#000',
 		defaultName = "Guest",
 		draggingTool = false,
 		canvasName = $('#canvasName').text(),
@@ -21,7 +21,7 @@ DrawPlugin = function ($, socket) {
 	alertify.set({ delay: 1000 * 30 });
 
 	var settings = {
-		lineWidth: options.penSize
+		lineWidth: 3
 	};
 
 	var pastDragX = 0, pastDragY = 0;

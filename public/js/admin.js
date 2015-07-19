@@ -5,8 +5,18 @@ $(function(){
 
 	var adminSocket = io.connect();
 
+	adminSocket.on("connect", function(){
+		adminSocket.emit("options");
+	});
+
 	adminSocket.on('redirect', function(data){
 		window.location = data.url;
+	});
+
+	adminSocket.on('options', function (options) {
+		$("#subjectPenSize").val(options.subjectPenSize);
+		$("#adminPenColour").val(options.adminPenColour).change(); // manually fire onChange event.
+		$("#subjectPenColour").val(options.subjectPenColour).change();
 	});
 
 	adminSocket.on('stimulus', function (stimulus) {
