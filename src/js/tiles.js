@@ -1,15 +1,32 @@
 /**
  * Uses the http://touchpunch.furf.com enhancement for JQ UI draggable.
+ *
  */
 TilesPlugin = function ($, socket) {
 
 	var canvasName = $('#canvasName').text();
 	var tiles = [];
-	var self = this; // event closure buster
+	//var self = this; // event closure buster
 
 	var settings = {
 		liveDrag: true,
 		graphemeTrayVisible: false
+	};
+
+	// API ----------------------------------------------------------------------
+
+	this.options = function(options){
+		console.log('TILES received options:', options);
+
+		settings.graphemeTrayVisible = (options.graphemeTrayVisible == "true");
+
+		//console.log('TILES settings.graphemeTrayVisible:', settings.graphemeTrayVisible);
+		if(SciWriter.role == 'admin'){
+			$('#graphemeTrayVisible').prop('checked', settings.graphemeTrayVisible);
+		}
+		else {
+			$('div#grapheme-tiles-tray').css('visibility', settings.graphemeTrayVisible ? 'visible' : 'hidden');
+		}
 	};
 
 	// UI -----------------------------------------------------------------------
@@ -18,7 +35,7 @@ TilesPlugin = function ($, socket) {
 		accept: ".grapheme-tile",
 		drop: function( event, ui ) {
 			socket.emit('drop',{
-				'canvasName': canvasName,
+				'canvasName': canvasName,//used?
 				'grapheme': $(ui.draggable).text()
 			})
 		}
@@ -41,20 +58,6 @@ TilesPlugin = function ($, socket) {
 	});
 
 	// SOCKET FUNCTIONS ---------------------------------------------------------
-
-	socket.on('options', function(options){
-		console.log('TILES received options:', options);
-
-		settings.graphemeTrayVisible = (options.graphemeTrayVisible == "true");
-
-		console.log('TILES settings.graphemeTrayVisible:', settings.graphemeTrayVisible);
-		if(SciWriter.role == 'admin'){
-			$('#graphemeTrayVisible').prop('checked', settings.graphemeTrayVisible);
-		}
-		else {
-			$('div#grapheme-tiles-tray').css('visibility', settings.graphemeTrayVisible ? 'visible' : 'hidden');
-		}
-	});
 
 	// data.text is a space-separate list of graphemes
 	socket.on('stimulus', function(data){
@@ -130,6 +133,4 @@ TilesPlugin = function ($, socket) {
 				})
 		});
 	}
-
-	return this;
 };

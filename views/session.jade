@@ -4,6 +4,7 @@ html
   body
     div#cursors
     if sessionName && pageNo
+      // these optoins are all hidden by default (they could be built by the plugins...?)
       +textStimulus("presentation-text")
       +imageStimulus("presentation-image")
       +graphemeTilesStimulus("presentation-tiles")

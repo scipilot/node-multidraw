@@ -1,3 +1,7 @@
+/** This is Tim's original online drawing library.
+ * PJ: I initially mangled it by adding all the SciWriter stuff to it, then separated it into a plugin. It should be back to normal.
+ * PJ: I also got it working on iPad (manually implementing touchstart etc) but I've since noticed the Hammer lib? needs deduping!
+ */
 DrawPlugin = function ($, socket) {
 	if (!('getContext' in document.createElement('canvas'))) {
 		alert('Sorry, it looks like your browser does not support canvas!');
@@ -119,10 +123,10 @@ DrawPlugin = function ($, socket) {
 		$('#status').text("");
 	});
 
-	socket.on('options', function(options){
-		setColor = '#'+options.roles[SciWriter.role].penColour;
-		settings.lineWidth = options.roles[SciWriter.role].penSize;
-	});
+	this.options = function (options){
+		setColor = '#'+options.penColour;
+		settings.lineWidth = options.penSize;
+	};
 
 	/*Respond to server 'pings' */
 	socket.on('ping', function (data) {
@@ -352,6 +356,4 @@ DrawPlugin = function ($, socket) {
 			$('#paper').animate({top: 0, left: 0});
 		}
 	});
-
-	return this;
 };

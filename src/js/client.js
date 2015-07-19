@@ -4,7 +4,7 @@
 SciWriterClientApp = function ($, SciWriterApp) {
 	var socket = io.connect();
 	// The stimulus presentation strategy ID
-	var presentationId = 0, presentation, admin;
+	var presentationId = 0, presentation = null, admin = null;
 
 	// Create the admin plugin, before connecting.
 	if(SciWriterApp.role == 'admin'){
@@ -28,8 +28,17 @@ SciWriterClientApp = function ($, SciWriterApp) {
 		}
 		else {
 			// welcome screen?
-			presentation = DrawPlugin($, socket);
+			presentation = new DrawPlugin($, socket);
 		}
+	});
+
+	// Receives the options, and selects the current role.
+	socket.on('options', function(options){
+		var roleOptions = jQuery.extend(true, {}, options);
+		// override the top-level options with any role-specific ones.
+		$.extend(roleOptions, options.roles[SciWriter.role]);
+		roleOptions.roles = null; // hide
+		if(presentation) presentation.options(roleOptions);
 	});
 
 	// Set up the presentation strategies
@@ -42,27 +51,29 @@ SciWriterClientApp = function ($, SciWriterApp) {
 			console.log('CLIENT loading presentation: ', presentationId, presentation);
 
 			// Load up the right presentation and input plugins
+			// Really there's two independent options: presentation, and user-input/UI (+ admin ok 3)
+			// todo: I was thinking of just providing a list of plugins for each test scenario?
 			if(presentationId == 1 || presentationId == 2){
 				// Text
 				$("#presentation-text").show();
-				presentation = DrawPlugin($, socket);
+				presentation = new DrawPlugin($, socket);
 			}
 			else if (presentationId == 3){
 				//Preset Image Backgrounds
 				$("#presentation-image").show();
-				presentation = DrawPlugin($, socket);
+				presentation = new DrawPlugin($, socket);
 			}
 			else if (presentationId == 4){
 				// GPC tiles
 				$("#presentation-tiles").show();
-				presentation = TilesPlugin($, socket);
+				presentation = new TilesPlugin($, socket);
 			}
 		}
 	});
 
 	// server sent us the test stimulus: word/image background
 	// Show this in via the session's presentation strategy
-	// todo move to plugins...
+	// todo move remaining stimulus handling to plugins...
 	socket.on('stimulus', function (stimulus) {
 		console.log('CLIENT received stimulus: ', stimulus);
 		if(presentationId == 1 || presentationId == 2){

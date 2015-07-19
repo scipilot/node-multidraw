@@ -118,6 +118,4 @@ AdminPlugin = function($, adminSocket){
 			text: txt
 		})
 	}
-
-	return this;
 };
