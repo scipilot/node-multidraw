@@ -23,4 +23,5 @@ html
       h3 Click on the canvas background to practise writing and drawing.
       p#status
   include ./inc/foot.jade
-  script(src="/js/draw.min.js")
+  script(src="/js/main.min.js")
+  script(type='text/javascript') $(DrawPlugin($, io.connect()));
