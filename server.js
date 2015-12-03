@@ -9,7 +9,7 @@ var jade = require('jade');
 var io = require('socket.io').listen(server);
 var os = require('os');
 var redis = require("redis");
-var redisClient = redis.createClient();
+var redisClient 	= redis.createClient();
 var lzwCompress = require('lzwcompress');
 var compressor = require('node-minify');
 

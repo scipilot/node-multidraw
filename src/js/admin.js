@@ -2,9 +2,9 @@
 AdminPlugin = function($, adminSocket){
 
 	adminSocket.on('options', function (options) {
-		$("#subjectPenSize").val(options.subjectPenSize);
-		$("#adminPenColour").val(options.adminPenColour).change(); // manually fire onChange event.
-		$("#subjectPenColour").val(options.subjectPenColour).change();
+		if(options.subjectPenSize) 		$("#subjectPenSize").val(options.subjectPenSize);
+		if(options.adminPenColour) 		$("#adminPenColour").val(options.adminPenColour).change(); // manually fire onChange event.
+		if(options.subjectPenColour) 	$("#subjectPenColour").val(options.subjectPenColour).change();
 	});
 
 	adminSocket.on('redirect', function(data){
