@@ -1,4 +1,4 @@
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 80;
 console.log("Listening on port " + port);
 var http = require('http')
 var express = require('express'), app = express();

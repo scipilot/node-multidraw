@@ -35,9 +35,12 @@ SciWriterClientApp = function ($, SciWriterApp) {
 	// Receives the options, and selects the current role.
 	socket.on('options', function(options){
 		var roleOptions = jQuery.extend(true, {}, options);
+
 		// override the top-level options with any role-specific ones.
 		$.extend(roleOptions, options.roles[SciWriter.role]);
 		roleOptions.roles = null; // hide
+
+		// call the presentation API
 		if(presentation) presentation.options(roleOptions);
 	});
 
