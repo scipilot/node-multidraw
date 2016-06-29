@@ -2,7 +2,7 @@
  * The client app manages the connection to the server and loads presentation plugins.
  */
 SciWriterClientApp = function ($, SciWriterApp) {
-	var socket = io.connect();
+	var socket = io.connect(SciWriterApp.host);
 	// The stimulus presentation strategy ID
 	var presentationId = 0, presentation = null, admin = null;
 
