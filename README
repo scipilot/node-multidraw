@@ -11,6 +11,7 @@ Features:
 * Administration mode allows teach to perform remote assistance via guided navigation
 * Free-text prompts
 * Background images
+* Letter/Phoneme (GPC) Tiles
 
 
 License: MIT
@@ -36,6 +37,10 @@ To run it daemonised, use `forever`, `daemonize2` or this command form:
 
     `cd node-multidraw; nohup node server.js >/dev/null 2>&1 &`
 
+or during dev:
+
+    `supervisor --watch server.js,draw.js,public/style.css server.js`
+
 # Usage
 
 Once running visit
@@ -46,12 +51,20 @@ or
 
     `localhost:5000/c/room-name` to implicitly create a new canvas
 
+
 ## Guided mode (assisted learning extension)
 
 Author: Pip Jones
 Status: WIP / alpha!
 
-For the assisted learning model, the canvases are arranged in sequences of "pages".
+For the assisted learning model, presenatation sessions are structured over the shared canvas:
+
+ - the canvases are arranged in sequences of "pages".
+ - usage is administered and stored in sessions
+ - users are defined as admin/subject (rather than peers)
+ - admins have more controls
+ - presentation stimuli can be "underlayed" and drawn over
+ - there are several stimuli types (below)
 
 The following route is the initial admin screen:
 
@@ -74,10 +87,12 @@ The admin can go back through previous pages to review/print analyse the test su
 Some of the language-test mechanics involve presenting a test stimulus to the subject (child),
 and then asking them to write or read what they see, or fill in the blanks etc.
 
-There are two main implementations:
+There are current implementations:
 
-- Free Text: the admin can type anything, or select from a pick-list of prefabricated stimuli
+- Blank canvas
+- Free Text: the admin can type anything, or select from a pick-list of prefabricated stimulii
 - Background Images: the admin can upload pre-set lists of images
+- Letter/Phoneme Tiles: a tray of scrabble-like tiles which can be moved around on the canvas.
 
 ---
 
@@ -85,14 +100,14 @@ There are two main implementations:
 
 For Assisted Learning Alpha trial:
 
-- ? Read-only mode to review/print canvas
+- ? Read-only mode to review/print canvas, i.e. mark it as locked to prevent accidents.
 
 Later:
-- Allow the screens to be rendered from another website - more like a JQuery plugin which calls this codebase via socket/API.
+- Allow the screens to be rendered to/from another website - more like a JQuery plugin which calls this codebase via socket/API.
 i.e. separating the page-load/rendering from the drawing functionality.
 I want to be able to run the system from another existing web application which hosts the
 assitive learning test structure, content and records the results.
 - Authentication (via MOTIf?)
 - prepared sequence of BG images i.e. a preset test. This will probably come from MOTIf, via an API/config injection.
 - Convert to new multi-draw project
-- Implement proper partitioning of canvases (sessions) and connections
+- Implement proper partitioning of canvases, sessions and connections (currently these are a bit blurred)
